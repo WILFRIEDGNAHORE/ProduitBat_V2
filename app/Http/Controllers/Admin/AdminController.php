@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Auth;
+use App\Http\Requests\Admin\PasswordRequest;
 use App\Http\Requests\Admin\LoginRequest;
 use App\Services\Admin\AdminService;
 use Session;
@@ -94,5 +95,23 @@ class AdminController extends Controller
     {
         $data = $request->all();
         return $this->adminService->verifyPassword($data);
+    }
+
+    public function updatePasswordRequest(PasswordRequest $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $data = $request->input();
+            $pwdStatus = $this->adminService->updatePassword($data);
+            
+            if($pwdStatus['status'] == "success")
+            {
+                return redirect()->back()->with('success_message', $pwdStatus['message']);
+            }
+            else
+            {
+                return redirect()->back()->with('error_message', $pwdStatus['message']);
+            }
+        }
     }
 }

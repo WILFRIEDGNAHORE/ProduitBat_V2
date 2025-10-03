@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 use Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Admin;
 class AdminService
 {
     public function login($data)
@@ -34,5 +35,22 @@ class AdminService
         } else {
             return "false";
         }
+    }
+    public function updatePassword($data){
+if (Hash::check($data['current_pwd'], Auth::guard('admin')->user()->password)) {
+   if($data['new_pwd'] == $data['confirm_pwd']){
+    Admin::where('email', Auth::guard('admin')->user()->email)
+        ->update(['password' => bcrypt($data['new_pwd'])]);
+        $status = "success";
+        $message = "Password updated successfully";
+   }else{
+    $status = "error";
+    $message = "New Password and Confirm Password not matched";
+   }
+}else{
+    $status = "error";
+    $message = "Current password is not matched";
+}
+return ["status" => $status, "message" => $message];
     }
 }

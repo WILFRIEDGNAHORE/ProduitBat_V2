@@ -13,13 +13,16 @@ Route::prefix('admin')->group(function(){
     Route::get('login',[AdminController::class,'create'])->name('admin.login');
     //Handle Login form
     Route::post('login',[AdminController::class,'store'])->name('admin.login.request');
-    // Dashboard Route
     Route::group(['middleware' => ['admin']], function () {
-        
+            // Dashboard Route
         Route::resource('dashboard', AdminController::class)->only(['index']);
+        //display update password page
         Route::get('update-password', [AdminController::class, 'edit'])->name('admin.update-password');
-
+        //verify password Route
         Route::post('verify-password', [AdminController::class, 'verifyPassword'])->name('admin.verify-password');
+        //update password Route
+        Route::post('admin/update-password', [AdminController::class, 'updatePasswordRequest'])->name('admin.update-password.request');
+        //logout Route
         Route::get('logout',[AdminController::class,'destroy'])->name('admin.logout');
 
     });    
