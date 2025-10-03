@@ -18,6 +18,8 @@ Route::prefix('admin')->group(function(){
         
         Route::resource('dashboard', AdminController::class)->only(['index']);
         Route::get('update-password', [AdminController::class, 'edit'])->name('admin.update-password');
+
+        Route::post('verify-password', [AdminController::class, 'verifyPassword'])->name('admin.verify-password');
         Route::get('logout',[AdminController::class,'destroy'])->name('admin.logout');
 
     });    

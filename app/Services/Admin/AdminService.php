@@ -2,7 +2,7 @@
 
 namespace App\Services\Admin;
 use Auth;
-
+use Illuminate\Support\Facades\Hash;
 class AdminService
 {
     public function login($data)
@@ -27,5 +27,12 @@ class AdminService
             $loginStatus = 0;
         }
         return $loginStatus;
+    }
+    public function verifyPassword($data){
+        if (Hash::check($data['current_pwd'], Auth::guard('admin')->user()->password)) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
 }

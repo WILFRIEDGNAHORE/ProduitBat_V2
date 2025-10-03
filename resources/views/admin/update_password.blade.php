@@ -55,6 +55,7 @@
                                         id="current_pwd"
                                         name="current_pwd"
                                     />
+                                    <span id="verifyPwd"></span>
                                 </div>
 
                                 <!-- New Password -->

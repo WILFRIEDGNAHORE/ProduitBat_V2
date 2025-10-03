@@ -5,13 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use App\Http\Requests\Admin\LoginRequest;
 use App\Services\Admin\AdminService;
 use Session;
+use Hash;
 
 class AdminController extends Controller
 {
+
+    protected $adminService;
+
+    // Inject  AdminService using constructor
+    public function __construct(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -35,8 +44,7 @@ class AdminController extends Controller
     public function store(LoginRequest $request)
     {
             $data = $request->all();
-            $service = new AdminService();
-            $loginStatus = $service->login($data);
+            $loginStatus = $this->adminService->login($data);  
             if($loginStatus == 1)
             {
                 return redirect()->route('dashboard.index');
@@ -46,6 +54,7 @@ class AdminController extends Controller
                 return redirect()->back()->with('error_message', 'Invalid Email or Password');
             }
     }
+    
 
     /**
      * Display the specified resource.
@@ -79,5 +88,11 @@ class AdminController extends Controller
     {
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');
+    }
+
+    public function verifyPassword(Request $request)
+    {
+        $data = $request->all();
+        return $this->adminService->verifyPassword($data);
     }
 }
