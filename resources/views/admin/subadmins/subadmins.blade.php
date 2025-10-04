@@ -27,18 +27,17 @@
                             <div class="card-header">
                                 <h3 class="card-title">Subadmins</h3>
                                 <a style="max-width: 150px; float:right; display: inline-block;"
-                                    href="{{ url('admin/add-edit-subadmin') }}"
-                                    class="btn btn-primary">
+                                    href="{{ url('admin/add-edit-subadmin') }}" class="btn btn-primary">
                                     Add Sub Admin
                                 </a>
                             </div>
                         </div>
                         <div class="card-body">
-                            @if(Session :: has('success_message'))
+                            @if (Session::has('success_message'))
                             <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                                <strong>Success: {{ Session :: get('success_message') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-
-                                            label="Close"></button>
+                                <strong>Success: {{ Session::get('success_message') }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-
+                                        label="Close"></button>
                             </div>
                             @endif
                             <table id="subadmins" class="table table-bordered table-striped">
@@ -52,28 +51,53 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($subadmins as $subadmin)
+                                    @foreach ($subadmins as $subadmin)
                                     <tr>
                                         <td>{{ $subadmin->id }}</td>
                                         <td>{{ $subadmin->name }}</td>
                                         <td>{{ $subadmin->mobile }}</td>
-                                        <td>{{$subadmin->email }}</td>
+                                        <td>{{ $subadmin->email }}</td>
                                         <td>
-                                            @if($subadmin->status == 1)
-                                            <a class="updateSubadminStatus" data-subadmin_id="{{ $subadmin->id }}"
-                                                style='color:#3f6ed3' href="javascript:void(0)">
-                                                <i class="fas fa-toggle-on" data-status="Active"></i></a>@else
-                                            <a class="updateSubadminStatus" data-subadmin_id="{{ $subadmin->id }}"
-                                                style="color:grey" href="javascript:void(0)">
-                                                <i class="fas fa-toggle-off" data-status="Inactive"></i></a>
-                                            @endif&nbsp;&nbsp; <a style='color:#3f6ed3;' title="
-                                                Delete Subadmin" href="{{ url('admin/delete-subadmin/'.$subadmin->id) }}">
-                                                <i class="fas fa-trash"></i></a>&nbsp;&nbsp;<a style='color:#3f6ed3;' title="
-                                                Edit Subadmin" href="{{ url('admin/add-edit-subadmin/'.$subadmin->id) }}"><i class="fas fa-edit"></i></a>
+                                            @if ($subadmin->status == 1)
+                                            <a class="updateSubadminStatus"
+                                                data-subadmin_id="{{ $subadmin->id }}"
+                                                style="color:#3f6ed3"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-on" data-status="Active"></i>
+                                            </a>
+                                            @else
+                                            <a class="updateSubadminStatus"
+                                                data-subadmin_id="{{ $subadmin->id }}"
+                                                style="color:grey"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                            </a>
+                                            @endif
 
+                                            &nbsp;&nbsp;
+
+                                            <a href="{{ url('admin/add-edit-subadmin/' . $subadmin->id) }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            &nbsp;&nbsp;
+
+                                            <a title="Set Permissions for Sub-admin"
+                                                href="{{ url('admin/update-role/' . $subadmin->id) }}">
+                                                <i class="fas fa-unlock"></i>
+                                            </a>
+
+                                            &nbsp;&nbsp;
+
+                                            <a style="color:#3f6ed3;" title="Delete Subadmin"
+                                                href="{{ url('admin/delete-subadmin/' . $subadmin->id) }}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach
+
+
                                 </tbody>
                             </table>
                         </div>
@@ -83,7 +107,4 @@
         </div>
     </div>
 </main>
-
-
-
 @endsection
