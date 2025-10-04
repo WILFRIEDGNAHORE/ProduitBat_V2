@@ -24,4 +24,28 @@
     }
       });
     });
+
+    $(document).on('click','#deleteProfileImage',function(){
+      if (confirm('Are you sure you want to remove your Profile Image?')) {
+          var admin_id = $(this).data('admin-id');
+          $.ajax({
+              headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+              },
+              type:'post',
+              url:'delete-profile-image',
+              data:{admin_id:admin_id},
+              success:function(resp){
+                  if(resp['status']==true){
+                      alert(resp['message']);
+                      $('#profileImageBlock').remove();
+                  }
+              },
+              error:function(){
+                  alert("Error occurred while deleting the image.");
+              }
+          });
+      }
+  });
+  
   });

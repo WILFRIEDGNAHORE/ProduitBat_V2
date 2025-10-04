@@ -125,8 +125,13 @@ class AdminController extends Controller
     public function updateDetails(DetailRequest $request)
     {
         Session::put('page', 'update-details');
-        $data = $request->all();
-        $this->adminService->updateDetails($data);
-        return redirect()->back()->with('success_message', 'Details updated successfully');
+        $this->adminService->updateDetails($request);
+        return redirect()->back()->with('success_message', 'Détails mis à jour avec succès');
+    }
+
+    public function deleteProfileImage(Request $request)
+    {
+        $status = $this->adminService->deleteProfileImage($request->admin_id);
+        return response()->json($status);
     }
 }

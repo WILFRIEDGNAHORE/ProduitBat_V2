@@ -53,7 +53,7 @@
 
 
                         <!--begin::Form-->
-                        <form method="post" action="{{ route('admin.update-details.request') }}">
+                        <form method="post" action="{{ route('admin.update-details.request') }}" enctype="multipart/form-data">
     @csrf
     <!--begin::Body-->
     <div class="card-body">
@@ -75,6 +75,20 @@
             <input type="text" class="form-control" id="mobile" name="mobile"
                 value="{{ Auth::guard('admin')->user()->mobile }}">
         </div>
+        <div class="mb-3">
+    <label for="image" class="form-label">Image</label>
+    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+    @if(!empty(Auth::guard('admin')->user()->image))
+        <div id="profileImageBlock">
+            <a target="_blank" href="{{ url('admin/images/photos/'.Auth::guard('admin')->user()->image) }}">View</a> |
+            <input type="hidden" name="current_image" value="{{ Auth::guard('admin')->user()->image }}">
+            <a href="javascript:void(0);" id="deleteProfileImage" 
+               data-admin-id="{{ Auth::guard('admin')->user()->id }}" 
+               class="text-danger">Delete</a>
+        </div>
+    @endif
+</div>
+
     </div>
     <!--end::Body-->
 

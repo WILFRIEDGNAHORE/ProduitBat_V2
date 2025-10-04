@@ -24,6 +24,7 @@ class DetailRequest extends FormRequest
         return [
             'name' => 'required|regex:/^[\pL\s\-]+$/u|max:255',
             'mobile' => 'required|numeric|digits:10',
+            'image' => 'image',
         ];
     }
     public function messages(): array
@@ -35,6 +36,7 @@ class DetailRequest extends FormRequest
             'mobile.required' => 'Mobile number is required',
             'mobile.numeric' => 'Mobile number must be numeric',
             'mobile.digits' => 'Mobile number must be 10 digits',
+            'image.image' => 'Image must be an image',
         ];
     }
 }
