@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
+use Session;
 class AdminService
 {
     public function login($data)
@@ -52,5 +53,11 @@ if (Hash::check($data['current_pwd'], Auth::guard('admin')->user()->password)) {
     $message = "Current password is not matched";
 }
 return ["status" => $status, "message" => $message];
+    }
+
+    public function updateDetails($data){
+        Session::put('page', 'update-details');
+        Admin::where('email', Auth::guard('admin')->user()->email)
+        ->update(['name' => $data['name'], 'mobile' => $data['mobile']]);
     }
 }

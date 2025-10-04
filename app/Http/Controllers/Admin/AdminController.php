@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\Admin\PasswordRequest;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Http\Requests\Admin\DetailRequest;
 use App\Services\Admin\AdminService;
 use Session;
 use Hash;
@@ -113,5 +114,19 @@ class AdminController extends Controller
                 return redirect()->back()->with('error_message', $pwdStatus['message']);
             }
         }
+    }
+
+    public function editDetails()
+    {
+        Session::put('page', 'update-details');
+        return view('admin.update_details');
+    }
+
+    public function updateDetails(DetailRequest $request)
+    {
+        Session::put('page', 'update-details');
+        $data = $request->all();
+        $this->adminService->updateDetails($data);
+        return redirect()->back()->with('success_message', 'Details updated successfully');
     }
 }
