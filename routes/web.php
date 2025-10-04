@@ -8,15 +8,15 @@ Route::get('/', function () {
 });
 
 
-Route::prefix('admin')->group(function(){
+Route::prefix('admin')->group(function () {
     //Show Login form
-    Route::get('login',[AdminController::class,'create'])->name('admin.login');
+    Route::get('login', [AdminController::class, 'create'])->name('admin.login');
     //Handle Login form
-    Route::post('login',[AdminController::class,'store'])->name('admin.login.request');
+    Route::post('login', [AdminController::class, 'store'])->name('admin.login.request');
     Route::group(['middleware' => ['admin']], function () {
 
 
-            // Dashboard Route
+        // Dashboard Route
         Route::resource('dashboard', AdminController::class)->only(['index']);
 
 
@@ -40,10 +40,17 @@ Route::prefix('admin')->group(function(){
         Route::get('subadmins', [AdminController::class, 'subadmins']);
 
 
+        Route::post('update-subadmin-status', [AdminController::class, 'updateSubadminStatus']);
+        Route::get('add-edit-subadmin/{id?}', [AdminController::class, 'addEditSubadmin']);
+        Route::post('add-edit-subadmin/request', [
+            AdminController::class,
+            'addEditSubadminRequest'
+        ]);
+
+        Route::get('delete-subadmin/{id}', [AdminController::class, 'deleteSubadmin']);
+
+
         //logout Route
-        Route::get('logout',[AdminController::class,'destroy'])->name('admin.logout');
-
+        Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');
     });
-
 });
-

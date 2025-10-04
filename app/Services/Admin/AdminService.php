@@ -12,21 +12,26 @@ class AdminService
 {
     public function login($data)
     {
-        if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
-            // Remember me Admin Email and Password
-            if (!empty($data['remember'])) {
-                setcookie('email', $data['email'], time() + 3600);
-                setcookie('password', $data['password'], time() + 3600);
-            } else {
-                setcookie('email', '');
-                setcookie('password', '');
+        $admin = Admin::where('email', $data['email'])->first();
+        if ($admin) {
+            if ($admin->status == 0) {
+                return "inactive"; // Return status if the account is inactive
             }
-
-            $loginStatus = 1;
-        } else {
-            $loginStatus = 0;
+            if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' =>
+            $data['password'], 'status' => 1])) {
+                // Remember Admin Email and Password
+                if (!empty($data["remember"])) {
+                    setcookie("email", $data["email"], time() + 3600);
+                    setcookie("password", $data["password"], time() + 3600);
+                } else {
+                    setcookie("email", "");
+                    setcookie("password", "");
+                }
+                return "success"; // Return success if login is successful
+            } else {
+                return "invalid"; // Return invalid if credentials are incorrect
+            }
         }
-        return $loginStatus;
     }
 
     public function verifyPassword($data)
@@ -102,5 +107,82 @@ class AdminService
     {
         $subadmins = Admin::where('role', 'subadmin')->get();
         return $subadmins;
+    }
+
+
+    public function updateSubadminStatus($data)
+    {
+        $status = ($data['status'] == "Active") ? 0 : 1;
+        Admin::where('id', $data['subadmin_id'])->update(['status' => $status]);
+        return $status;
+    }
+
+    public function deleteSubadmin($id)
+    {
+        // Delete Sub Admin
+        Admin::where('id', $id)->delete();
+        $message = 'Subadmin deleted successfully!';
+        return array("message" => $message);
+    }
+
+    public function addEditSubadmin($request)
+    {
+        $data = $request->all();
+
+        if (isset($data['id']) && $data['id'] != "") {
+            $subadmindata = Admin::find($data['id']);
+            $message = "Subadmin updated successfully!";
+        } else {
+            $subadmindata = new Admin;
+            $message = "Subadmin added successfully!";
+        }
+
+        // Upload Admin Image
+        if ($request->hasFile('image')) {
+            $image_tmp = $request->file('image');
+
+            if ($image_tmp->isValid()) {
+                // Create image manager with desired driver
+                $manager = new ImageManager(new Driver());
+
+                // Read image from file system
+                $image = $manager->read($image_tmp);
+
+                // Get Image Extension
+                $extension = $image_tmp->getClientOriginalExtension();
+
+                // Generate New Image Name
+                $imageName = rand(111, 99999) . '.' . $extension;
+
+                // Path
+                $image_path = 'admin/images/photos/' . $imageName;
+
+                // Save image in specified path
+                $image->save($image_path);
+            }
+        } elseif (!empty($data['current_image'])) {
+            $imageName = $data['current_image'];
+        } else {
+            $imageName = "";
+        }
+
+        // Assign values
+        $subadmindata->image  = $imageName;
+        $subadmindata->name   = $data['name'];
+        $subadmindata->mobile = $data['mobile'];
+
+        if (!isset($data['id'])) {
+            $subadmindata->email  = $data['email'];
+            $subadmindata->role   = 'subadmin';
+            $subadmindata->status = 1;
+        }
+
+        if (!empty($data['password'])) {
+            $subadmindata->password = bcrypt($data['password']);
+        }
+
+        $subadmindata->save();
+
+        return ["message" => $message];
     }
 }

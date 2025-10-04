@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\PasswordRequest;
 use App\Http\Requests\Admin\LoginRequest;
 use App\Http\Requests\Admin\DetailRequest;
 use App\Services\Admin\AdminService;
+use App\Http\Requests\Admin\SubadminRequest;
 use Session;
 use Hash;
 
@@ -46,12 +47,16 @@ class AdminController extends Controller
     {
         $data = $request->all();
         $loginStatus = $this->adminService->login($data);
-        if ($loginStatus == 1) {
+        if ($loginStatus == "success") {
             return redirect()->route('dashboard.index');
+        } elseif ($loginStatus == "inactive") {
+            return redirect()->back()->with('error_message', 'Your account is inactive.
+        Please contact the administrator.');
         } else {
-            return redirect()->back()->with('error_message', 'Invalid Email or Password');
+            return redirect()->back()->with('error_message', 'Invalid Email or Password!');
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -131,5 +136,47 @@ class AdminController extends Controller
         Session::put('page', 'subadmins');
         $subadmins = $this->adminService->subadmins();
         return view('admin.subadmins.subadmins', compact('subadmins'));
+    }
+
+    public function updateSubadminStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            $status = $this->adminService->updateSubadminStatus($data);
+            return response()->json(['status' => $status, 'subadmin_id' =>
+            $data['subadmin_id']]);
+        }
+    }
+
+    public function deleteSubadmin($id)
+    {
+        $result = $this->adminService->deleteSubadmin($id);
+        return redirect()->back()->with('success_message', $result['message']);
+    }
+
+    public function addEditSubadmin($id = null)
+    {
+        if ($id == "") {
+            $title = "Add Subadmin";
+            $subadmindata = array();
+        } else {
+            $title = "Edit Subadmin";
+            $subadmindata = Admin::find($id);
+        }
+        return view('admin.subadmins.add_edit_subadmin')->with(compact(
+            'title',
+            'subadmindata'
+        ));
+    }
+
+    public function addEditSubadminRequest(SubadminRequest $request)
+    {
+        if ($request->isMethod('post')) {
+            $result = $this->adminService->addEditSubadmin($request);
+            return redirect('admin/subadmins')->with(
+                'success_message',
+                $result['message']
+            );
+        }
     }
 }
