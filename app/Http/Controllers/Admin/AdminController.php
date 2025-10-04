@@ -15,7 +15,6 @@ use Hash;
 
 class AdminController extends Controller
 {
-
     protected $adminService;
 
     // Inject  AdminService using constructor
@@ -45,18 +44,14 @@ class AdminController extends Controller
      */
     public function store(LoginRequest $request)
     {
-            $data = $request->all();
-            $loginStatus = $this->adminService->login($data);  
-            if($loginStatus == 1)
-            {
-                return redirect()->route('dashboard.index');
-            }
-            else
-            {
-                return redirect()->back()->with('error_message', 'Invalid Email or Password');
-            }
+        $data = $request->all();
+        $loginStatus = $this->adminService->login($data);
+        if ($loginStatus == 1) {
+            return redirect()->route('dashboard.index');
+        } else {
+            return redirect()->back()->with('error_message', 'Invalid Email or Password');
+        }
     }
-    
 
     /**
      * Display the specified resource.
@@ -100,17 +95,13 @@ class AdminController extends Controller
 
     public function updatePasswordRequest(PasswordRequest $request)
     {
-        if($request->isMethod('post'))
-        {
+        if ($request->isMethod('post')) {
             $data = $request->input();
             $pwdStatus = $this->adminService->updatePassword($data);
-            
-            if($pwdStatus['status'] == "success")
-            {
+
+            if ($pwdStatus['status'] == 'success') {
                 return redirect()->back()->with('success_message', $pwdStatus['message']);
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error_message', $pwdStatus['message']);
             }
         }
@@ -133,5 +124,12 @@ class AdminController extends Controller
     {
         $status = $this->adminService->deleteProfileImage($request->admin_id);
         return response()->json($status);
+    }
+
+    public function subadmins()
+    {
+        Session::put('page', 'subadmins');
+        $subadmins = $this->adminService->subadmins();
+        return view('admin.subadmins.subadmins', compact('subadmins'));
     }
 }

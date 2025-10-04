@@ -11,7 +11,7 @@ class PasswordRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true ;
+        return true;
     }
 
     /**
@@ -22,9 +22,9 @@ class PasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_pwd' =>[ 'required', 'string', 'min:6', 'max:12'],
-            'new_pwd' =>[ 'required', 'string', 'min:6', ' max:12', 'different:current_pwd'],
-            'confirm_pwd' =>[ 'required', 'string', 'min:6', 'max:12', 'same:new_pwd'],
+            'current_pwd' => ['required', 'string', 'min:6', 'max:12'],
+            'new_pwd' => ['required', 'string', 'min:6', ' max:12', 'different:current_pwd'],
+            'confirm_pwd' => ['required', 'string', 'min:6', 'max:12', 'same:new_pwd'],
         ];
     }
 
