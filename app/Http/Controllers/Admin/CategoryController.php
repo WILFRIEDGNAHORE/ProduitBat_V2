@@ -4,15 +4,35 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\Admin\CategoryService;
+use Session;
 
 class CategoryController extends Controller
 {
+    protected $categoryService;
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        Session::put('page', 'categories');
+
+        $result = $this->categoryService->categories();
+
+        if ($result['status'] === 'error') {
+            return redirect('admin/dashboard')->with('error_message', $result['message']);
+        }
+
+        return view('admin.categories.index', [
+            'categories'       => $result['categories'],
+            'categoriesModule' => $result['categoriesModule']
+        ]);
     }
 
     /**
