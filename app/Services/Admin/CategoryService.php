@@ -136,4 +136,32 @@ class CategoryService
 
         return $message;
     }
+
+    /**
+     * Toggle category status via AJAX
+     * @param array $data expects ['status' => 'Active'|'Inactive', 'category_id' => int]
+     * @return int new status 0|1
+     */
+    public function updateCategoryStatus($data)
+    {
+        // Determine new status based on current label coming from the UI
+        $newStatus = ($data['status'] === 'Active') ? 0 : 1;
+
+        // Fetch category and update safely
+        $category = Category::find($data['category_id']);
+        if ($category) {
+            $category->status = $newStatus;
+            $category->save();
+            return (int) $category->status;
+        }
+
+        // If not found, return the computed intended status (UI will refresh on next load)
+        return (int) $newStatus;
+    }
+
+    public function deleteCategory($id){
+        Category :: where('id', $id)->delete();
+        $message = 'Category deleted successfully!';
+        return ['message' => $message];
+    }
 }
