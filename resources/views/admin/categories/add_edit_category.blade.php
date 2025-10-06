@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Category Management</h3>
+                    <h3 class="mb-0">Catalogue Management</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
@@ -58,15 +58,55 @@
                         <form
                             name="categoryForm"
                             id="categoryForm"
-                            action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}"
+                            action="{{ !empty($category->id) ? route('categories.update', $category->id) : route('categories.store') }}"
                             method="post"
                             enctype="multipart/form-data">
                             @csrf
-                            @if(isset($category))
+                            @if(!empty($category->id))
                             @method('PUT')
                             @endif
 
+
+
                             <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="parent_id">Category Level (Parent Category) *</label>
+                                    <select name="parent_id" class="form-control">
+                                        <option value="">Select</option>
+                                        <option value="0" @if(isset($category) && $category->parent_id == 0) selected @endif>
+                                            Main Category
+                                        </option>
+
+                                        @foreach($getCategories as $cat)
+                                        <option value="{{ $cat['id'] }}"
+                                            @if(isset($category->parent_id) && $category->parent_id == $cat['id']) selected @endif>
+                                            {{ $cat['name'] }}
+                                        </option>
+
+                                        {{-- Sous-catégories --}}
+                                        @if(!empty($cat['subcategories']))
+                                        @foreach($cat['subcategories'] as $subcat)
+                                        <option value="{{ $subcat['id'] }}"
+                                            @if(isset($category->parent_id) && $category->parent_id == $subcat['id']) selected @endif>
+                                            &nbsp;&nbsp;&nbsp;&raquo;&nbsp;{{ $subcat['name'] }}
+                                        </option>
+
+                                        {{-- Sous-sous-catégories --}}
+                                        @if(!empty($subcat['subcategories']))
+                                        @foreach($subcat['subcategories'] as $subsubcat)
+                                        <option value="{{ $subsubcat['id'] }}"
+                                            @if(isset($category->parent_id) && $category->parent_id == $subsubcat['id']) selected @endif>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&raquo;&raquo;&nbsp;{{ $subsubcat['name'] }}
+                                        </option>
+                                        @endforeach
+                                        @endif
+                                        @endforeach
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
                                 {{-- Category Name --}}
                                 <div class="mb-3">
                                     <label class="form-label" for="category_name">Category Name *</label>

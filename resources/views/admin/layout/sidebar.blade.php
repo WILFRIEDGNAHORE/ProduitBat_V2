@@ -73,6 +73,37 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon bi bi-clipboard-fill"></i>
+                        <p>
+                            Catalogue Management
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{url('admin/categories')}}" class="nav-link {{ (Session::get('page') == 'categories') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Categories </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{url('admin/products')}}" class="nav-link {{ (Session::get('page') == 'products') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Products</p>
+                            </a>
+                        </li>
+
+
+                        <li class="nav-item">
+                            <a href="./index3.html" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Dashboard v3</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
                     <a href="./generate/theme.html" class="nav-link">
                         <i class="nav-icon bi bi-palette"></i>
                         <p>Theme Generate</p>
