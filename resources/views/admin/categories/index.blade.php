@@ -27,7 +27,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Categories</h3>
                                 <a style="max-width: 150px; float:right; display: inline-block;"
-                                    href="{{ url('admin/add-edit-category') }}" class="btn btn-primary">
+                                    href="{{ url('admin/categories/create') }}" class="btn btn-primary">
                                     Add Category
                                 </a>
                             </div>
@@ -60,7 +60,34 @@
                                         <td>{{ $category->url }}</td>
                                         <td>{{ $category->created_at->format('F j, Y, g:i a') }}</td>
                                         <td>
-                                            <!-- Actions (Enable/Disable, Edit, Delete) will be added here -->
+                                            @if ($category->status == 1)
+                                            <a class="updateCategoryStatus"
+                                                data-category_id="{{ $category->id }}"
+                                                style="color:#3f6ed3"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-on" data-status="Active"></i>
+                                            </a>
+                                            @else
+                                            <a class="updateCategoryStatus"
+                                                data-category_id="{{ $category->id }}"
+                                                style="color:grey"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                            </a>
+                                            @endif
+
+                                            &nbsp;&nbsp;
+
+                                            <a href="{{ url('admin/categories/' . $category->id . '/edit') }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            &nbsp;&nbsp;
+
+                                            <a style="color:#3f6ed3;" title="Delete Category"
+                                                href="{{ url('admin/delete-category/' . $category->id) }}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach
