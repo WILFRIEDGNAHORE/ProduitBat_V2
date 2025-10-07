@@ -116,4 +116,16 @@ class CategoryController extends Controller
             return response()->json(['status' => $status, 'category_id' => $data['category_id']]);
         }
     }
+
+    public function deleteCategoryImage(Request $request)
+    {
+        $status = $this->categoryService->deleteCategoryImage($request->category_id);
+        return response()->json($status);
+    }
+
+    public function deleteSizeChart(Request $request)
+    {
+        $status = $this->categoryService->deleteSizeChart($request->category_id);
+        return response()->json($status);
+    }
 }

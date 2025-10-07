@@ -110,4 +110,60 @@ $(document).ready(function () {
             },
         });
     });
+
+    $(document).on("click", "#deleteCategoryImage", function () {
+        if (confirm("Are you sure you want to remove this Category Image?")) {
+            var category_id = $(this).data("category-id");
+
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                type: "POST",
+                url: "/admin/delete-category-image",
+                data: { category_id: category_id },
+                success: function (resp) {
+                    if (resp.status === true) {
+                        alert(resp.message);
+                        $("#categoryImageBlock").remove(); // ✅ Supprime le bloc d'image
+                    } else {
+                        alert("Failed to delete the image.");
+                    }
+                },
+                error: function () {
+                    alert("Error occurred while deleting the image.");
+                },
+            });
+        }
+    });
+
+    $(document).on("click", "#deleteSizeChart", function () {
+      if (confirm("Are you sure you want to remove this Size Chart?")) {
+          var category_id = $(this).data("category-id");
+
+          $.ajax({
+              headers: {
+                  "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                      "content"
+                  ),
+              },
+              type: "POST",
+              url: "/admin/delete-size-chart",
+              data: { category_id: category_id },
+              success: function (resp) {
+                  if (resp.status === true) {
+                      alert(resp.message);
+                      $("#sizeChartBlock").remove(); // ✅ Supprime le bloc d'image
+                  } else {
+                      alert("Failed to delete the image.");
+                  }
+              },
+              error: function () {
+                  alert("Error occurred while deleting the image.");
+              },
+          });
+      }
+  });
 });

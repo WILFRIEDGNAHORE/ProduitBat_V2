@@ -57,6 +57,8 @@ Route::prefix('admin')->group(function () {
         //Categories
         Route::resource('categories', CategoryController::class);
         Route::post('update-category-status', [CategoryController::class, 'updateCategoryStatus']);
+        Route::post('delete-category-image', [CategoryController::class, 'deleteCategoryImage']);
+        Route::post('delete-size-chart', [CategoryController::class, 'deleteSizeChart']);
 
         //logout Route
         Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');

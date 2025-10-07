@@ -121,7 +121,7 @@
                                 </div>
 
                                 {{-- Category Image --}}
-                                <div class="mb-3">
+                                <div class="mb-3" id="categoryImageBlock">
                                     <label class="form-label" for="category_image">Category Image</label>
                                     <input
                                         type="file"
@@ -130,10 +130,11 @@
                                         name="category_image"
                                         accept="image/*">
                                     @if(!empty($category->image))
-                                    <div class="mt-2">
-                                        <img src="{{ asset('front/images/categories/' . $category->image) }}"
+                                    <div class="mt-2" id="categoryImageBlock">
+                                        <img src="{{ asset('front/categories/' . $category->image) }}"
                                             width="50"
                                             alt="Category Image">
+                                        <a href="javascript:void(0);" id="deleteCategoryImage" data-category-id="{{ $category->id }}" class="text-danger">Delete</a>
                                     </div>
                                     @endif
                                 </div>
@@ -148,10 +149,11 @@
                                         name="size_chart"
                                         accept="image/*">
                                     @if(!empty($category->size_chart))
-                                    <div class="mt-2">
-                                        <img src="{{ asset('front/images/sizecharts/' . $category->size_chart) }}"
+                                    <div class="mt-2" id="sizeChartBlock">
+                                        <img src="{{ asset('front/sizecharts/' . $category->size_chart) }}"
                                             width="50"
                                             alt="Size Chart">
+                                        <a href="javascript:void(0);" id="deleteSizeChart" data-category-id="{{ $category->id }}" class="text-danger">Delete</a>
                                     </div>
                                     @endif
                                 </div>

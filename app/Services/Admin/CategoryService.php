@@ -159,9 +159,44 @@ class CategoryService
         return (int) $newStatus;
     }
 
-    public function deleteCategory($id){
-        Category :: where('id', $id)->delete();
+    public function deleteCategory($id)
+    {
+        Category::where('id', $id)->delete();
         $message = 'Category deleted successfully!';
         return ['message' => $message];
+    }
+
+    public function deleteCategoryImage($categoryld)
+    {
+        $categoryImage = Category::where('id', $categoryld)->value('image');
+        if ($categoryImage) {
+            // Match the upload path used in addEditCategory(): public/front/categories
+            $category_image_path = 'front/categories/' . $categoryImage;
+            $fullPath = public_path($category_image_path);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+                Category::where('id', $categoryld)->update(['image' => null]);
+                return ['status' => true, 'message' => 'Category image deleted successfully!'];
+            }
+            return ['status' => false, 'message' => 'Category image not found!'];
+        }
+        return ['status' => false, 'message' => 'No image associated with this category.'];
+    }
+
+    public function deleteSizeChart($categoryld)
+    {
+        $sizeChart = Category::where('id', $categoryld)->value('size_chart');
+        if ($sizeChart) {
+            // Match the upload path used in addEditCategory(): public/front/sizecharts
+            $sizechart_path = 'front/sizecharts/' . $sizeChart;
+            $fullPath = public_path($sizechart_path);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+                Category::where('id', $categoryld)->update(['size_chart' => null]);
+                return ['status' => true, 'message' => 'Size chart deleted successfully!'];
+            }
+            return ['status' => false, 'message' => 'Size chart not found!'];
+        }
+        return ['status' => false, 'message' => 'No size chart associated with this category.'];
     }
 }
