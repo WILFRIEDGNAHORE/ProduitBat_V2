@@ -140,30 +140,57 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#deleteSizeChart", function () {
-      if (confirm("Are you sure you want to remove this Size Chart?")) {
-          var category_id = $(this).data("category-id");
+        if (confirm("Are you sure you want to remove this Size Chart?")) {
+            var category_id = $(this).data("category-id");
 
-          $.ajax({
-              headers: {
-                  "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                      "content"
-                  ),
-              },
-              type: "POST",
-              url: "/admin/delete-size-chart",
-              data: { category_id: category_id },
-              success: function (resp) {
-                  if (resp.status === true) {
-                      alert(resp.message);
-                      $("#sizeChartBlock").remove(); // ✅ Supprime le bloc d'image
-                  } else {
-                      alert("Failed to delete the image.");
-                  }
-              },
-              error: function () {
-                  alert("Error occurred while deleting the image.");
-              },
-          });
-      }
-  });
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                type: "POST",
+                url: "/admin/delete-size-chart",
+                data: { category_id: category_id },
+                success: function (resp) {
+                    if (resp.status === true) {
+                        alert(resp.message);
+                        $("#sizeChartBlock").remove(); // ✅ Supprime le bloc d'image
+                    } else {
+                        alert("Failed to delete the image.");
+                    }
+                },
+                error: function () {
+                    alert("Error occurred while deleting the image.");
+                },
+            });
+        }
+    });
+
+    $(document).on("click", ".confirmDelete", function (e) {
+        e.preventDefault();
+        let button = $(this);
+        let module = button.data("module");
+        let moduleid = button.data("id");
+        let form = button.closest("form");
+        let redirectUrl = "/admin/delete-" + module + "/" + moduleid;
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (form.length > 0) {
+                    form.submit(); // Submit form (used in category module)
+                } else {
+                    window.location.href = redirectUrl; // Redirect for subadmin delete
+                }
+            }
+        });
+    });
 });

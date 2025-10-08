@@ -89,8 +89,7 @@
 
                                             &nbsp;&nbsp;
 
-                                            <a style="color:#3f6ed3;" title="Delete Subadmin"
-                                                href="{{ url('admin/delete-subadmin/' . $subadmin->id) }}">
+                                            <a class="confirmDelete" name="Subadmin" title="Delete Subadmin" data-module="subadmin" data-id="{{ $subadmin->id }}" style="color:#3f6ed3;" href="javascript:void(0)">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>

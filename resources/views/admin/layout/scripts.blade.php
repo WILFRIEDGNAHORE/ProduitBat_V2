@@ -214,6 +214,7 @@
 
 <script src="{{asset('admin/js/jquery-3.7.1.min.js ')}}"></script>
 <script src="{{asset('admin/js/custom.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <link rel="stylesheet"
   href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />

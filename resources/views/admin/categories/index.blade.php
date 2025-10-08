@@ -90,12 +90,22 @@
 
                                             &nbsp;&nbsp;
                                             @if($categoriesModule['full_access'] == 1)
-                                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this category?')">@csrf
+                                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                                style="display:inline-block;">
+                                                @csrf
                                                 @method('DELETE')
-                                                <button type="submit" style="border:none; background:none; color:#3f6ed3;" title="Delete Category">
+                                                <button class="confirmDelete"
+                                                    name="Category"
+                                                    title="Delete Category"
+                                                    type="button"
+                                                    style="border:none; background:none; color:#3f6ed3;"
+                                                    href="javascript:void(0)"
+                                                    data-module="category"
+                                                    data-id="{{ $category->id }}">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
+
                                             @endif
                                             @endif
 
