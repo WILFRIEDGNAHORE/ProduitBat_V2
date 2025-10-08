@@ -63,6 +63,7 @@ Route::prefix('admin')->group(function () {
 
         //Products
         Route::resource('products', ProductController::class);
+        Route::post('update-product-status', [ProductController::class, 'updateProductStatus']);
 
         //logout Route
         Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');

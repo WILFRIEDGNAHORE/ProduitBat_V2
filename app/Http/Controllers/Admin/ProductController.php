@@ -11,6 +11,8 @@ use Auth;
 
 class ProductController extends Controller
 {
+    /** @var ProductService */
+    protected ProductService $productService;
     //inject service
     public function __construct(ProductService $productService)
     {
@@ -74,6 +76,21 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $result = $this->productService->deleteProduct($id);
+        return redirect()->back()->with('success_message', $result['message']);
+    }
+
+    /**
+     * AJAX: Update product status (toggle Active/Inactive)
+     */
+    public function updateProductStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            $status = $this->productService->updateProductStatus($data);
+            return response()->json(['status' => $status]);
+        }
+
+        return response()->json(['message' => 'Bad Request'], 400);
     }
 }

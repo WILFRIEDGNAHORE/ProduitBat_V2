@@ -181,22 +181,29 @@ class AdminController extends Controller
         }
     }
 
-    public function updateRole($id) {
-        $subadminRoles = AdminsRole :: where('subadmin_id', $id)->get()->toArray();
-        $subadminDetails = Admin :: where('id', $id)->first()->toArray();
-        $modules = ['categories', 'products', 'orders', 'users','subscribers'];
+    public function updateRole($id)
+    {
+        $subadminRoles = AdminsRole::where('subadmin_id', $id)->get()->toArray();
+        $subadminDetails = Admin::where('id', $id)->first()->toArray();
+        $modules = ['categories', 'products', 'orders', 'users', 'subscribers'];
         $title = "Update " . $subadminDetails['name'] . " Subadmin Roles/Permissions";
-        return view('admin.subadmins.update_roles')->with(compact('title', 'id',
-        'subadminRoles','modules'));
-
+        return view('admin.subadmins.update_roles')->with(compact(
+            'title',
+            'id',
+            'subadminRoles',
+            'modules'
+        ));
     }
 
-    public function updateRoleRequest(Request $request) {
+    public function updateRoleRequest(Request $request)
+    {
         if ($request->isMethod('post')) {
-        $data = $request->all();
-        $service = new AdminService();
-        $result = $service->updateRole($request);
-        return redirect()->back()->with('success_message', $result['message']);
+            $data = $request->all();
+            $service = new AdminService();
+            $result = $service->updateRole($request);
+            return redirect()->back()->with('success_message', $result['message']);
         }
     }
+
+    
 }

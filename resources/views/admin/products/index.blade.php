@@ -60,7 +60,46 @@
                                         <td>{{ $product->product_code }}</td>
                                         <td>{{ $product->product_color }}</td>
                                         <td>
-                                            <!-- Actions (Enable/Disable, Edit, Delete) will be added here -->
+                                            @if($productsModule['edit_access'] == 1 || $productsModule['full_access'] == 1)
+                                                @if($product->status == 1)
+                                                <a class="updateProductStatus"
+                                                    data-product-id="{{ $product->id }}"
+                                                    style="color:#3f6ed3"
+                                                    href="javascript:void(0)">
+                                                    <i class="fas fa-toggle-on" data-status="Active"></i>
+                                                </a>
+                                                @else
+                                                <a class="updateProductStatus"
+                                                    data-product-id="{{ $product->id }}"
+                                                    style="color:grey"
+                                                    href="javascript:void(0)">
+                                                    <i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                                </a>
+                                                @endif
+
+                                                &nbsp;&nbsp;
+                                                <a href="{{ url('admin/products/' . $product->id . '/edit') }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+
+                                                @if($productsModule['full_access'] == 1)
+                                                &nbsp;&nbsp;
+                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="confirmDelete"
+                                                            name="Product"
+                                                            title="Delete Product"
+                                                            type="button"
+                                                            style="border:none; background:none; color:#3f6ed3;"
+                                                            href="javascript:void(0)"
+                                                            data-module="product"
+                                                            data-id="{{ $product->id }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                                @endif
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
