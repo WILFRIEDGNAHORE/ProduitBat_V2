@@ -221,7 +221,9 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script>
   $(document).ready(function() {
+    $("#subadmins").DataTable();
     $("#categories").DataTable();
+    $("#products").DataTable();
   });
 </script>
 You can also use it for other modules like:
