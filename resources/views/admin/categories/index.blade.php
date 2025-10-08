@@ -26,10 +26,12 @@
                         <div class="card-header">
                             <div class="card-header">
                                 <h3 class="card-title">Categories</h3>
+                                @if($categoriesModule['edit_access'] == 1 || $categoriesModule['full_access'] == 1)
                                 <a style="max-width: 150px; float:right; display: inline-block;"
                                     href="{{ url('admin/categories/create') }}" class="btn btn-primary">
                                     Add Category
                                 </a>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
@@ -59,7 +61,10 @@
                                         <td>{{ $category->parentcategory->name ?? '' }}</td>
                                         <td>{{ $category->url }}</td>
                                         <td>{{ $category->created_at->format('F j, Y, g:i a') }}</td>
+
                                         <td>
+
+                                            @if($categoriesModule['edit_access'] == 1 || $categoriesModule['full_access'] == 1)
                                             @if ($category->status == 1)
                                             <a class="updateCategoryStatus"
                                                 data-category-id="{{ $category->id }}"
@@ -83,12 +88,16 @@
                                             </a>
 
 
-                                            &nbsp;&nbsp;<form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this category?')">@csrf
+                                            &nbsp;&nbsp;
+                                            @if($categoriesModule['full_access'] == 1)
+                                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this category?')">@csrf
                                                 @method('DELETE')
                                                 <button type="submit" style="border:none; background:none; color:#3f6ed3;" title="Delete Category">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
+                                            @endif
+                                            @endif
 
                                         </td>
                                     </tr>

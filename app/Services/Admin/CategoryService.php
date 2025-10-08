@@ -3,7 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Models\Category;
-use App\Models\AdminRole;
+use App\Models\AdminsRole;
 use Auth;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Facades\Image;
@@ -29,7 +29,7 @@ class CategoryService
                 'full_access' => 1
             ];
         } else {
-            $categoriesModuleCount = AdminRole::where([
+            $categoriesModuleCount = AdminsRole::where([
                 'subadmin_id' => $admin->id,
                 'module' => 'categories'
             ])->count();
@@ -38,7 +38,7 @@ class CategoryService
                 $status = "error";
                 $message = "This feature is restricted for you!";
             } else {
-                $categoriesModule = AdminRole::where([
+                $categoriesModule = AdminsRole::where([
                     'subadmin_id' => $admin->id,
                     'module' => 'categories'
                 ])->first()->toArray();

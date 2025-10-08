@@ -55,6 +55,7 @@
                                 <p>Update Details</p>
                             </a>
                         </li>
+
                         @if(Auth :: guard('admin')->user()->role == "admin")
                         <li class="nav-item">
                             <a href="{{ url('admin/subadmins')}}" class="nav-link {{ (Session :: get('page') =='subadmins') ? 'active' : '' }}">
@@ -72,6 +73,7 @@
                         </li>
                     </ul>
                 </li>
+
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon bi bi-clipboard-fill"></i>
@@ -81,6 +83,7 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
+
                         <li class="nav-item">
                             <a href="{{url('admin/categories')}}" class="nav-link {{ (Session::get('page') == 'categories') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
