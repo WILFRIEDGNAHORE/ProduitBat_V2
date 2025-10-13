@@ -198,6 +198,7 @@ $(document).ready(function () {
 
     $(document).on("click", ".confirmDelete", function (e) {
         e.preventDefault();
+
         let button = $(this);
         let module = button.data("module");
         let moduleid = button.data("id");
@@ -214,10 +215,22 @@ $(document).ready(function () {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                if (form.length > 0) {
-                    form.submit(); // Submit form (used in category module)
+                // Check if form exists AND has delete route
+                if (
+                    form.length > 0 &&
+                    form.attr("action") &&
+                    form.attr("method") === "POST"
+                ) {
+                    // Create and append hidden_method input if not present
+                    if (form.find("input[name='_method']").length === 0) {
+                        form.append(
+                            '<input type="hidden" name="_method" value="DELETE">'
+                        );
+                    }
+                    form.submit();
                 } else {
-                    window.location.href = redirectUrl; // Redirect for subadmin delete
+                    // Use redirect if no delete form present
+                    window.location.href = redirectUrl;
                 }
             }
         });

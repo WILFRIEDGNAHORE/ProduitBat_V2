@@ -115,4 +115,36 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Bad Request'], 400);
     }
+
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $fileName = $this->productService->handleImageUpload($request->file('file'));
+            return response()->json(['fileName' => $fileName]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
+
+    public function uploadVideo(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $fileName = $this->productService->handleVideoUpload($request->file('file'));
+            return response()->json(['fileName' => $fileName]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
+
+    public function deleteProductMainImage($id)
+    {
+        $message = $this->productService->deleteProductMainImage($id);
+        return redirect()->back()->with('success_message', $message);
+    }
+
+    public function deleteProductVideo($id)
+    {
+        $message = $this->productService->deleteProductVideo($id);
+        return redirect()->back()->with('success_message', $message);
+    }
 }

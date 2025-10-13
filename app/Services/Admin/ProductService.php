@@ -110,8 +110,95 @@ class ProductService
         $product->meta_description = $data['meta_description'] ?? "";
         $product->status = 1;
 
+        // Upload main image
+        if (!empty($data['main_image_hidden'])) {
+            $sourcePath = public_path('temp/' . $data['main_image_hidden']);
+            $destinationPath = public_path('front/images/products/' . $data['main_image_hidden']);
+
+            if (file_exists($sourcePath)) {
+                @copy($sourcePath, $destinationPath);
+                @unlink($sourcePath);
+            }
+
+            $product->main_image = $data['main_image_hidden'];
+        }
+
+        // Upload product video
+        if (!empty($data['product_video_hidden'])) {
+            $sourcePath = public_path('temp/' . $data['product_video_hidden']);
+            $destinationPath = public_path('front/videos/products/' . $data['product_video_hidden']);
+
+            if (file_exists($sourcePath)) {
+                @copy($sourcePath, $destinationPath);
+                @unlink($sourcePath);
+            }
+
+            $product->product_video = $data['product_video_hidden'];
+        }
+
+        // Final fallback (if nothing uploaded in Dropzone)
+        $product->main_image = $request->main_image ?? $product->main_image;
+        $product->product_video = $request->product_video ?? $product->product_video;
+
+        // Save product
         $product->save();
 
         return $message;
+    }
+
+    // ✅ Upload Image
+    public function handleImageUpload($file)
+    {
+        $imageName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('front/images/products'), $imageName);
+        return $imageName;
+    }
+
+    // ✅ Upload Video
+    public function handleVideoUpload($file)
+    {
+        $videoName = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('front/videos/products'), $videoName);
+        return $videoName;
+    }
+
+    // ✅ Delete Main Image
+    public function deleteProductMainImage($id)
+    {
+        $product = Product::select('main_image')->where('id', $id)->first();
+
+        if (!$product || !$product->main_image) {
+            return "No image found.";
+        }
+
+        $imagePath = public_path('front/images/products/' . $product->main_image);
+
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+
+        Product::where('id', $id)->update(['main_image' => null]);
+
+        return "Product main image has been deleted successfully!";
+    }
+
+    // ✅ Delete Video
+    public function deleteProductVideo($id)
+    {
+        $productVideo = Product::select('product_video')->where('id', $id)->first();
+
+        if (!$productVideo || !$productVideo->product_video) {
+            return "No video found.";
+        }
+
+        $videoPath = public_path('front/videos/products/' . $productVideo->product_video);
+
+        if (file_exists($videoPath)) {
+            unlink($videoPath);
+        }
+
+        Product::where('id', $id)->update(['product_video' => null]);
+
+        return "Product video has been deleted successfully!";
     }
 }

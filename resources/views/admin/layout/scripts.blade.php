@@ -216,6 +216,73 @@
 <script src="{{asset('admin/js/custom.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Dropzone CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" rel="stylesheet" />
+
+<!-- Dropzone JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+<script>
+  Dropzone.autoDiscover = false;
+
+  // Main Image Dropzone
+  let mainimageDropzone = new Dropzone("#mainimageDropzone", {
+    url: "{{ route('product.upload.image') }}", // ✅ syntaxe correcte pour route()
+    maxFiles: 1,
+    acceptedFiles: "image/*",
+    maxFilesize: 0.5, // en Mo → 500 Ko
+    addRemoveLinks: true,
+    dictDefaultMessage: "Glissez-déposez une image ou cliquez pour téléverser",
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    init: function() {
+      this.on("success", function(file, response) {
+        document.getElementById('main_image_hidden').value = response.fileName;
+      });
+
+      this.on("error", function(file, message) {
+        alert(message);
+        this.removeFile(file);
+      });
+
+      this.on("maxfilesexceeded", function(file) {
+        this.removeAllFiles();
+        this.addFile(file);
+      });
+    }
+  });
+
+  let productVideoDropzone = new Dropzone("#productVideoDropzone", {
+    url: "{{ route('product.upload.video') }}", // ✅ route correcte
+    maxFiles: 1,
+    acceptedFiles: "video/*",
+    maxFilesize: 2, // ✅ 2 Mo max
+    addRemoveLinks: true,
+    dictDefaultMessage: "Glissez-déposez la vidéo ou cliquez pour téléverser",
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    init: function() {
+      this.on("success", function(file, response) {
+        document.getElementById('product_video_hidden').value = response.fileName;
+      });
+
+      this.on("error", function(file, message) {
+        alert(message);
+        this.removeFile(file);
+      });
+
+      this.on("maxfilesexceeded", function(file) {
+        this.removeAllFiles();
+        this.addFile(file);
+      });
+    }
+  });
+</script>
+
+
+
 <link rel="stylesheet"
   href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
