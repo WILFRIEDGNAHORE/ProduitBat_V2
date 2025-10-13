@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\ProductService;
 use App\Models\Product;
+use App\Http\Requests\Admin\ProductRequest;
 use Session;
 use Auth;
 use App\Models\Category;
@@ -48,7 +49,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         $message = $this->productService->addEditProduct($request);
         return redirect()->route('products.index')->with(
@@ -85,7 +86,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
         $request->merge(['id' => $id]);
         $message = $this->productService->addEditProduct($request);

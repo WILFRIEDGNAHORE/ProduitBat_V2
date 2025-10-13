@@ -108,9 +108,16 @@
                                         placeholder="Enter Product Code">
                                 </div>
 
+                                <div class="mb-3">
+                                    <label class="form-label" for="product_color">Product Color *</label>
+                                    <input type="text" name="product_color" class="form-control"
+                                        value="{{ old('product_color', $product->product_color ?? '') }}"
+                                        placeholder="Enter Product Color">
+                                </div>
+
                                 <?php $familyColors = \App\Models\Color::colors(); ?>
                                 <div class="mb-3">
-                                    <label class="form-label" for="family_color">Family Color</label>
+                                    <label class="form-label" for="family_color">Family Color *</label>
                                     <select name="family_color" class="form-control">
                                         <option value="">Please Select</option>
                                         @foreach($familyColors as $color)
@@ -122,16 +129,8 @@
                                     </select>
                                 </div>
 
-
                                 <div class="mb-3">
-                                    <label class="form-label" for="family_color">Family Color</label>
-                                    <input type="text" name="family_color" class="form-control"
-                                        value="{{ old('family_color', $product->family_color ?? '') }}"
-                                        placeholder="Enter Family Color">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="group_code">Group Code</label>
+                                    <label class="form-label" for="group_code">Group Code *</label>
                                     <input type="text" name="group_code" class="form-control"
                                         value="{{ old('group_code', $product->group_code ?? '') }}"
                                         placeholder="Enter Group Code">
