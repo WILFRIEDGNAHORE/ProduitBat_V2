@@ -8,7 +8,7 @@
                     <h3 class="mb-0">Products Management</h3>
                 </div>
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
+                    <ol class="breadcrumb float-sm- end">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
                             Products
@@ -28,20 +28,23 @@
                                 <h3 class="card-title">Products</h3>
                                 @if($productsModule['edit_access'] == 1 || $productsModule['full_access'] == 1)
                                 <a style="max-width: 150px; float:right; display: inline-block;"
-                                    href="{{ url('admin/products/create') }}" class="btn btn-primary">
+                                    href="{{ url('admin/products/create') }}"
+                                    class="btn btn-block btn-primary">
                                     Add Product
                                 </a>
                                 @endif
+
                             </div>
                         </div>
                         <div class="card-body">
-                            @if (Session::has('success_message'))
+                            @if(Session :: has('success_message'))
                             <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                                <strong>Success: {{ Session::get('success_message') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-
-                                        label="Close"></button>
+                                <strong>Success :< /strong> {{ Session :: get('success_message') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-
+                                            label="Close"> </button>
                             </div>
                             @endif
+
                             <table id="products" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -49,6 +52,8 @@
                                         <th>Product Name</th>
                                         <th>Product Code</th>
                                         <th>Product Color</th>
+                                        <th>Category Name</th>
+                                        <th>Parent Category Name</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -59,46 +64,55 @@
                                         <td>{{ $product->product_name }}</td>
                                         <td>{{ $product->product_code }}</td>
                                         <td>{{ $product->product_color }}</td>
+                                        <td>{{ $product->category->name ?? '' }}</td>
+                                        <td>
+                                            @if(isset($product->category) && isset($product->category->parentcategory) && isset($product->category->parentcategory->name))
+                                            {{ $product->category->parentcategory->name }}
+                                            @else
+                                            ROOT
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($productsModule['edit_access'] == 1 || $productsModule['full_access'] == 1)
-                                                @if($product->status == 1)
-                                                <a class="updateProductStatus"
-                                                    data-product-id="{{ $product->id }}"
-                                                    style="color:#3f6ed3"
-                                                    href="javascript:void(0)">
-                                                    <i class="fas fa-toggle-on" data-status="Active"></i>
-                                                </a>
-                                                @else
-                                                <a class="updateProductStatus"
-                                                    data-product-id="{{ $product->id }}"
-                                                    style="color:grey"
-                                                    href="javascript:void(0)">
-                                                    <i class="fas fa-toggle-off" data-status="Inactive"></i>
-                                                </a>
-                                                @endif
+                                            @if($product->status == 1)
+                                            <a class="updateProductStatus"
+                                                data-product-id="{{ $product->id }}"
+                                                style="color:#3f6ed3"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-on" data-status="Active"></i>
+                                            </a>
+                                            @else
+                                            <a class="updateProductStatus"
+                                                data-product-id="{{ $product->id }}"
+                                                style="color:grey"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                            </a>
+                                            @endif
+                                            @if($productsModule['edit_access'] == 1 || $productsModule['full_access'] == 1)
+                                            <a href="{{ url('admin/products/'.$product->id.'/edit') }}"><i class="fas fa-edit">
+                                                </i></a>
+                                            @endif
 
-                                                &nbsp;&nbsp;
-                                                <a href="{{ url('admin/products/' . $product->id . '/edit') }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
 
-                                                @if($productsModule['full_access'] == 1)
-                                                &nbsp;&nbsp;
-                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="confirmDelete"
-                                                            name="Product"
-                                                            title="Delete Product"
-                                                            type="button"
-                                                            style="border:none; background:none; color:#3f6ed3;"
-                                                            href="javascript:void(0)"
-                                                            data-module="product"
-                                                            data-id="{{ $product->id }}">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                                @endif
+
+                                            @if($productsModule['full_access'] == 1)
+                                            &nbsp;&nbsp;
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="confirmDelete"
+                                                    name="Product"
+                                                    title="Delete Product"
+                                                    type="button"
+                                                    style="border:none; background:none; color:#3f6ed3;"
+                                                    href="javascript:void(0)"
+                                                    data-module="product"
+                                                    data-id="{{ $product->id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            @endif
                                             @endif
                                         </td>
                                     </tr>

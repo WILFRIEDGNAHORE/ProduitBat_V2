@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Admin\ProductService;
+use App\Models\Product;
 use Session;
 use Auth;
-
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -36,7 +37,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Add Product';
+        $getCategories = Category::getCategories('Admin');
+        return view(
+            'admin.products.add_edit_product',
+            compact('title', 'getCategories')
+        );
     }
 
     /**
@@ -44,8 +50,13 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $message = $this->productService->addEditProduct($request);
+        return redirect()->route('products.index')->with(
+            'success_message',
+            $message
+        );
     }
+
 
     /**
      * Display the specified resource.
@@ -60,16 +71,27 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = 'Edit Product';
+        $product = Product::findOrFail($id);
+        $getCategories = Category::getCategories('Admin');
+        return view('admin.products.add_edit_product', compact(
+            'title',
+            'product',
+            'getCategories'
+        ));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->merge(['id' => $id]);
+        $message = $this->productService->addEditProduct($request);
+        return redirect()->route('products.index')->with('success_message', $message);
     }
+
 
     /**
      * Remove the specified resource from storage.
