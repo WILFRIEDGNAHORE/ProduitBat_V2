@@ -108,12 +108,20 @@
                                         placeholder="Enter Product Code">
                                 </div>
 
+                                <?php $familyColors = \App\Models\Color::colors(); ?>
                                 <div class="mb-3">
-                                    <label class="form-label" for="product_color">Product Color</label>
-                                    <input type="text" name="product_color" class="form-control"
-                                        value="{{ old('product_color', $product->product_color ?? '') }}"
-                                        placeholder="Enter Product Color">
+                                    <label class="form-label" for="family_color">Family Color</label>
+                                    <select name="family_color" class="form-control">
+                                        <option value="">Please Select</option>
+                                        @foreach($familyColors as $color)
+                                        <option value="{{ $color->name }}"
+                                            @if(isset($product['family_color']) && $product['family_color']==$color->name) selected @endif>
+                                            {{ $color->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label class="form-label" for="family_color">Family Color</label>
