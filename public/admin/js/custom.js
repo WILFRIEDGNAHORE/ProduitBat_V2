@@ -1,4 +1,40 @@
 $(document).ready(function () {
+    const maxField = 10; // Max number of fields allowed
+    const wrapper = $(".field_wrapper"); // Fields wrapper
+    const addButton = ".add_button"; // Add button selector
+
+    // Template for remove button
+    const removeTmpl = `
+        <a href="javascript:void(0);" class="btn btn-sm btn-danger remove_button" title="Remove row">
+            <i class="fas fa-minus"></i>
+        </a>
+    `;
+
+    // Add new attribute row
+    $(document).on("click", addButton, function (e) {
+        e.preventDefault();
+
+        if (wrapper.find(".attribute-row").length >= maxField) return;
+
+        // Clone the row where the button was clicked
+        const row = $(this).closest(".attribute-row").clone();
+
+        // Clear input values
+        row.find("input").val("");
+
+        // Replace "Add" button by "Remove" button
+        row.find(addButton).replaceWith(removeTmpl);
+
+        // Append new row
+        wrapper.append(row);
+    });
+
+    // Remove attribute row
+    wrapper.on("click", ".remove_button", function (e) {
+        e.preventDefault();
+        $(this).closest(".attribute-row").remove();
+    });
+
     // Check Admin Password is correct or not
     $("#current_pwd").keyup(function () {
         var current_pwd = $("#current_pwd").val();

@@ -23,7 +23,7 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="row g-4">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <!--begin::Card-->
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header">
@@ -160,6 +160,122 @@
                                     <input type="number" step="0.01" name="product_weight" class="form-control"
                                         value="{{ old('product_weight', $product->product_weight ?? '') }}">
                                 </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label mb-1">Product Attributes</label>
+
+                                    <!-- Header row -->
+                                    <div class="d-none d-md-flex fw-semibold bg-light border rounded px-2 py-1 mb-2">
+                                        <div class="flex-fill col-2">Size</div>
+                                        <div class="flex-fill col-2 ms-4">SKU</div>
+                                        <div class="flex-fill col-2 ms-4">Price</div>
+                                        <div class="flex-fill col-2 ms-4">Stock</div>
+                                        <div class="flex-fill col-2 ms-4">Sort</div>
+                                        <div style="width:60px"></div>
+                                    </div>
+
+                                    <!-- Dynamic attribute rows -->
+                                    <div class="field_wrapper">
+                                        <!-- First (default) row -->
+                                        <div class="d-flex align-items-center gap-2 mb-2 attribute-row">
+                                            <input type="text" name="size[]" class="form-control flex-fill col-2" placeholder="Size">
+                                            <input type="text" name="sku[]" class="form-control flex-fill col-2" placeholder="SKU">
+                                            <input type="number" step="0.01" name="price[]" class="form-control flex-fill col-2" placeholder="Price">
+                                            <input type="number" name="stock[]" class="form-control flex-fill col-2" placeholder="Stock">
+                                            <input type="number" name="sort[]" class="form-control flex-fill col-2" placeholder="Sort">
+
+                                            <!-- Add button -->
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-success add_button" title="Add row">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if(isset($product['attributes']) && count($product['attributes']) > 0)
+                                <div class="mb-3">
+                                    <label class="form-label mb-1">Existing Product Attributes</label>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered align-middle mb-0">
+                                            <thead class="table-light text-center">
+                                                <tr>
+                                                    <th style="width: 15%;">Size</th>
+                                                    <th style="width: 20%;">SKU</th>
+                                                    <th style="width: 15%;">Price</th>
+                                                    <th style="width: 15%;">Stock</th>
+                                                    <th style="width: 15%;">Sort</th>
+                                                    <th style="width: 15%;">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($product['attributes'] as $attribute)
+                                                <tr class="text-center">
+                                                    {{-- Hidden field for attribute ID --}}
+                                                    <input type="hidden" name="attrId[]" value="{{ $attribute['id'] }}">
+
+                                                    <td>{{ $attribute['size'] }}</td>
+                                                    <td>{{ $attribute['sku'] }}</td>
+
+                                                    <td>
+                                                        <input type="number"
+                                                            name="update_price[]"
+                                                            value="{{ $attribute['price'] }}"
+                                                            class="form-control text-center"
+                                                            required>
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="number"
+                                                            name="update_stock[]"
+                                                            value="{{ $attribute['stock'] }}"
+                                                            class="form-control text-center"
+                                                            required>
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="number"
+                                                            name="update_sort[]"
+                                                            value="{{ $attribute['sort'] }}"
+                                                            class="form-control text-center"
+                                                            required>
+                                                    </td>
+
+                                                    <td>
+                                                        {{-- Toggle Status --}}
+                                                        @if($attribute['status'] == 1)
+                                                        <a class="updateAttributeStatus text-primary me-2"
+                                                            id="attribute-{{ $attribute['id'] }}"
+                                                            attribute_id="{{ $attribute['id'] }}"
+                                                            href="javascript:void(0)">
+                                                            <i class="fas fa-toggle-on" status="Active"></i>
+                                                        </a>
+                                                        @else
+                                                        <a class="updateAttributeStatus text-secondary me-2"
+                                                            id="attribute-{{ $attribute['id'] }}"
+                                                            attribute_id="{{ $attribute['id'] }}"
+                                                            href="javascript:void(0)">
+                                                            <i class="fas fa-toggle-off" status="Inactive"></i>
+                                                        </a>
+                                                        @endif
+
+                                                        {{-- Delete Attribute --}}
+                                                        <a title="Delete Attribute"
+                                                            href="javascript:void(0)"
+                                                            class="confirmDelete text-danger"
+                                                            record="attribute"
+                                                            recordid="{{ $attribute['id'] }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                @endif
+
+
 
                                 <!-- Product Main Image Upload Field -->
                                 <div class="mb-3">

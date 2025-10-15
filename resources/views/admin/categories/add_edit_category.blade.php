@@ -23,7 +23,7 @@
     <div class="app-content">
         <div class="container-fluid">
             <div class="row g-4">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <!--begin::Card-->
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header">
