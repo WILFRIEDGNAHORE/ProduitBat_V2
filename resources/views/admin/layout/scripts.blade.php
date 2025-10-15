@@ -213,6 +213,15 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script src="{{asset('admin/js/jquery-3.7.1.min.js ')}}"></script>
+
+
+
+<!-- jQuery UI CSS -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<!-- jQuery UI JS -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 <script src="{{asset('admin/js/custom.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -253,7 +262,7 @@
     }
   });
 
-  let productImagesDropzone = new Dropzone("#productimagesDropzone", {
+  let productImagesDropzone = new Dropzone("#productImagesDropzone", {
     url: "{{ route('product.upload.images') }}",
     maxFiles: 10,
     acceptedFiles: "image/*",
@@ -326,6 +335,39 @@
       this.on("maxfilesexceeded", function(file) {
         this.removeAllFiles();
         this.addFile(file);
+      });
+    }
+  });
+
+  // Product Image Sort Script
+  $("#sortableImages").sortable({
+    helper: 'clone',
+    placeholder: "sortable-placeholder",
+    forcePlaceholderSize: true,
+    scroll: true,
+    axis: 'x', // restrict to horizontal only
+    update: function(event, ui) {
+      let sortedIds = [];
+      $('#sortableImages .sortable-item').each(function(index) {
+        sortedIds.push({
+          id: $(this).data('id'),
+          sort: index
+        });
+      });
+
+      $.ajax({
+        url: "{{ route('admin.products.update-image-sorting') }}",
+        method: "POST",
+        data: {
+          _token: "{{ csrf_token() }}", // corrigé
+          sorted_images: sortedIds
+        },
+        success: function(response) {
+          console.log("Image order updated successfully");
+        },
+        error: function(xhr, status, error) {
+          console.error("Error updating image order:", error);
+        }
       });
     }
   });

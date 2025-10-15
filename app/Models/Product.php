@@ -13,11 +13,13 @@ class Product extends Model
 
     public function product_images()
     {
-        return $this->hasMany(ProductsImage::class);
+        return $this->hasMany(ProductsImage::class)->orderBy('sort', 'asc');
     }
 
     public function attributes()
     {
         return $this->hasMany('App\Models\ProductsAttribute');
     }
+
+
 }

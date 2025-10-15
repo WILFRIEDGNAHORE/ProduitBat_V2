@@ -305,27 +305,48 @@
                                     <label class="form-label" for="product_images_dropzone">
                                         Alternate Product Images (Multiple Uploads Allowed, Max 500 KB each)
                                     </label>
-                                    <div class="dropzone" id="productimagesDropzone"></div>
 
+                                    {{-- Dropzone upload area --}}
+                                    <div class="dropzone" id="productImagesDropzone"></div>
+
+                                    {{-- Existing uploaded images --}}
                                     @if(isset($product->product_images) && $product->product_images->count() > 0)
-                                    @foreach($product->product_images as $img)
-                                    <div style="display:inline-block; position:relative; margin:5px;">
-                                        <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
-                                            <img src="{{ asset('front/images/products/' . $img->image) }}" style="width:50px;">
-                                        </a>
-                                        <a href="javascript:void(0)" class="confirmDelete"
-                                            data-module="product-image"
+                                    @if($product->product_images->count() > 1)
+                                    <!-- Instruction Line -->
+                                    <p class="drag-instruction text-muted mt-2 mb-2">
+                                        <i class="fas fa-arrows-alt"></i>
+                                        Drag and drop the images below to reorder them
+                                    </p>
+                                    @endif
+
+                                    <div id="sortableImages" class="d-flex flex-wrap gap-2 mt-2">
+                                        @foreach($product->product_images as $img)
+                                        <div class="sortable-item position-relative border rounded p-1"
                                             data-id="{{ $img->id }}"
-                                            data-image="{{ $img->image }}">
-                                            <i class="fas fa-trash" style="position:absolute; top:0; right:0; color:red;"></i>
-                                        </a>
+                                            style="display:inline-block; width:60px; height:60px; cursor:move;">
+
+                                            <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
+                                                <img src="{{ asset('front/images/products/' . $img->image) }}"
+                                                    class="img-fluid rounded"
+                                                    style="width:100%; height:100%; object-fit:cover;">
+                                            </a>
+
+                                            <a href="javascript:void(0)"
+                                                class="confirmDelete position-absolute top-0 end-0 text-danger"
+                                                data-module="product-image"
+                                                data-id="{{ $img->id }}"
+                                                data-image="{{ $img->image }}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                     @endif
 
                                     <!-- Hidden input to collect alternate images -->
                                     <input type="hidden" name="product_images" id="product_images_hidden">
                                 </div>
+
 
 
                                 <!-- Product Video Upload Field -->

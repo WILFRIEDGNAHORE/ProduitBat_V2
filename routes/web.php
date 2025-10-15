@@ -76,6 +76,9 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-product-main-image/{id}', [ProductController::class, 'deleteProductMainimage']);
         Route::get('delete-product-video/{id}', [ProductController::class, 'deleteProductVideo']);
 
+        Route::post('/products/update-image-sorting', [ProductController::class, 'updatelmageSorting'])->name('admin.products.update-image-sorting');
+
+
 
         //logout Route
         Route::get('logout', [AdminController::class, 'destroy'])->name('admin.logout');
