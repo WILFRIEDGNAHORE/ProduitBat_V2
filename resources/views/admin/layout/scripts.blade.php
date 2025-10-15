@@ -253,6 +253,56 @@
     }
   });
 
+  let productImagesDropzone = new Dropzone("#productimagesDropzone", {
+    url: "{{ route('product.upload.images') }}",
+    maxFiles: 10,
+    acceptedFiles: "image/*",
+    parallelUploads: 10,
+    uploadMultiple: false,
+    maxFilesize: 0.5,
+    addRemoveLinks: true,
+    dictDefaultMessage: "Drag & drop product images or click to upload",
+    headers: {
+      'X-CSRF-TOKEN': "{{ csrf_token() }}"
+    },
+    init: function() {
+      this.on("success", function(file, response) {
+        // Append filename to hidden input
+        let hiddenInput = document.getElementById('product_images_hidden');
+        let currentVal = hiddenInput.value;
+        if (currentVal === "") {
+          hiddenInput.value = response.fileName;
+        } else {
+          hiddenInput.value = currentVal + ',' + response.fileName;
+        }
+        file.uploadedFileName = response.fileName;
+      });
+
+      this.on("removedfile", function(file) {
+        if (file.uploadedFileName) {
+          let hiddenInput = document.getElementById('product_images_hidden');
+          let currentVal = hiddenInput.value;
+          let files = currentVal.split(',');
+          files = files.filter(name => name !== file.uploadedFileName);
+          hiddenInput.value = files.join(',');
+
+          // Optional: Delete the file from server
+          $.ajax({
+            url: "{{ route('product.delete.temp.image') }}",
+            type: 'POST',
+            data: {
+              filename: file.uploadedFileName
+            },
+            headers: {
+              'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            }
+          });
+        }
+      });
+    }
+  });
+
+
   let productVideoDropzone = new Dropzone("#productVideoDropzone", {
     url: "{{ route('product.upload.video') }}", // ✅ route correcte
     maxFiles: 1,

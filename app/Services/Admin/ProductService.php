@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductsImage;
 use Auth;
 use App\Models\AdminsRole;
 
@@ -143,13 +144,41 @@ class ProductService
         // Save product
         $product->save();
 
+        // Upload Alternate Images
+        if (!empty($data['product_images'])) {
+            // Ensure we have an array
+            $imageFiles = is_array($data['product_images'])
+                ? $data['product_images']
+                : explode(',', $data['product_images']);
+
+            // Remove any empty values
+            $imageFiles = array_filter($imageFiles);
+
+            foreach ($imageFiles as $index => $filename) {
+                $sourcePath = public_path('temp/' . $filename);
+                $destinationPath = public_path('front/images/products/' . $filename);
+                if (file_exists($sourcePath)) {
+                    @copy($sourcePath, $destinationPath);
+                    @unlink($sourcePath);
+                }
+
+                \App\Models\ProductsImage::create([
+                    'product_id' => $product->id,
+                    'image' => $filename,
+                    'sort' => $index,
+                    'status' => 1
+                ]);
+            }
+        }
+
+
         return $message;
     }
 
     // ✅ Upload Image
     public function handleImageUpload($file)
     {
-        $imageName = time() . '.' . $file->getClientOriginalExtension();
+        $imageName = time() . '.' . rand(1111, 9999) . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('front/images/products'), $imageName);
         return $imageName;
     }
@@ -157,7 +186,7 @@ class ProductService
     // ✅ Upload Video
     public function handleVideoUpload($file)
     {
-        $videoName = time() . '.' . $file->getClientOriginalExtension();
+        $videoName = time() . '.' . rand(1111, 9999) . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('front/videos/products'), $videoName);
         return $videoName;
     }
@@ -180,6 +209,25 @@ class ProductService
         Product::where('id', $id)->update(['main_image' => null]);
 
         return "Product main image has been deleted successfully!";
+    }
+
+    public function deleteProductImage($id)
+    {
+        $productImage = ProductsImage::select('image')->where('id', $id)->first();
+
+        if (!$productImage || !$productImage->image) {
+            return "No image found.";
+        }
+
+        $imagePath = public_path('front/images/products/' . $productImage->image);
+
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+
+        ProductsImage::where('id', $id)->delete();
+
+        return "Product image has been deleted successfully!";
     }
 
     // ✅ Delete Video
