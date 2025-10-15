@@ -6,6 +6,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AdminsTableSeeder;
+use Database\Seeders\ProductsAttributesTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminsTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(ColorTableSeeder::class);
+        $this->call(ProductsAttributesTableSeeder::class);
     }
 }
