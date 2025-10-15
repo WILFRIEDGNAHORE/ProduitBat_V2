@@ -252,6 +252,14 @@ class ProductService
         return $message;
     }
 
+    public function updateAttributeStatus($data)
+    {
+        $status = ($data['status'] == "Active") ? 0 : 1;
+        ProductsAttribute::where('id', $data['attribute_id'])->update(['status' => $status]);
+        return $status;
+    }
+
+
 
 
     // ✅ Upload Image
@@ -327,5 +335,12 @@ class ProductService
         Product::where('id', $id)->update(['product_video' => null]);
 
         return "Product video has been deleted successfully!";
+    }
+
+    public function deleteProductAttribute($id)
+    {
+        // Delete Attribute
+        ProductsAttribute::where('id', $id)->delete();
+        return "Product Attribute has been deleted successfully!";
     }
 }

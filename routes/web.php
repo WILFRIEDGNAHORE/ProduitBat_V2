@@ -64,6 +64,8 @@ Route::prefix('admin')->group(function () {
         //Products
         Route::resource('products', ProductController::class);
         Route::post('update-product-status', [ProductController::class, 'updateProductStatus']);
+        Route::post('update-attribute-status', [ProductController::class, 'updateAttributeStatus']);
+        Route::get('delete-product-attribute/{id}', [ProductController::class, 'deleteProductAttribute']);
 
         Route::post('/product/upload-image', [ProductController::class, 'uploadimage'])->name('product.upload.image');
         Route::post('/product/upload-images', [ProductController::class, 'uploadImages'])->name('product.upload.images');

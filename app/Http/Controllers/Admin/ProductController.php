@@ -73,7 +73,7 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $title = 'Edit Product';
-        $product = Product::with('product_images','attributes')->findOrFail($id);
+        $product = Product::with('product_images', 'attributes')->findOrFail($id);
         $getCategories = Category::getCategories('Admin');
         return view('admin.products.add_edit_product', compact(
             'title',
@@ -152,6 +152,16 @@ class ProductController extends Controller
         return response()->json(['error' => 'No file uploaded'], 400);
     }
 
+    public function updateAttributeStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            $status = $this->productService->updateAttributeStatus($data);
+            return response()->json(['status' => $status, 'attribute_id' => $data['attribute_id']]);
+        }
+    }
+
+
     public function deleteProductMainImage($id)
     {
         $message = $this->productService->deleteProductMainImage($id);
@@ -170,6 +180,9 @@ class ProductController extends Controller
         return redirect()->back()->with('success_message', $message);
     }
 
-
-
+    public function deleteProductAttribute($id)
+    {
+        $message = $this->productService->deleteProductAttribute($id);
+        return redirect()->back()->with('success_message', $message);
+    }
 }

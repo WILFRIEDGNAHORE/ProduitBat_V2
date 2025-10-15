@@ -240,33 +240,36 @@
                                                             required>
                                                     </td>
 
-                                                    <td>
+                                                    <td class="text-center">
                                                         {{-- Toggle Status --}}
                                                         @if($attribute['status'] == 1)
-                                                        <a class="updateAttributeStatus text-primary me-2"
-                                                            id="attribute-{{ $attribute['id'] }}"
-                                                            attribute_id="{{ $attribute['id'] }}"
-                                                            href="javascript:void(0)">
-                                                            <i class="fas fa-toggle-on" status="Active"></i>
+                                                        <a class="updateAttributeStatus"
+                                                            data-attribute-id="{{ $attribute->id }}"
+                                                            href="javascript:void(0)"
+                                                            style="color:#3f6ed3">
+                                                            <i class="fas fa-toggle-on" data-status="Active"></i>
                                                         </a>
                                                         @else
-                                                        <a class="updateAttributeStatus text-secondary me-2"
-                                                            id="attribute-{{ $attribute['id'] }}"
-                                                            attribute_id="{{ $attribute['id'] }}"
-                                                            href="javascript:void(0)">
-                                                            <i class="fas fa-toggle-off" status="Inactive"></i>
+                                                        <a class="updateAttributeStatus"
+                                                            data-attribute-id="{{ $attribute->id }}"
+                                                            href="javascript:void(0)"
+                                                            style="color:grey">
+                                                            <i class="fas fa-toggle-off" data-status="Inactive"></i>
                                                         </a>
                                                         @endif
+
+                                                        &nbsp;&nbsp;
 
                                                         {{-- Delete Attribute --}}
                                                         <a title="Delete Attribute"
                                                             href="javascript:void(0)"
                                                             class="confirmDelete text-danger"
-                                                            record="attribute"
-                                                            recordid="{{ $attribute['id'] }}">
+                                                            data-module="product-attribute"
+                                                            data-id="{{ $attribute['id'] }}">
                                                             <i class="fas fa-trash"></i>
                                                         </a>
                                                     </td>
+
                                                 </tr>
                                                 @endforeach
                                             </tbody>
