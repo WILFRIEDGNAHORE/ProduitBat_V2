@@ -77,6 +77,19 @@ Route::prefix('admin')->group(function () {
         Route::get('delete-product-video/{id}', [ProductController::class, 'deleteProductVideo']);
 
         Route::post('/products/update-image-sorting', [ProductController::class, 'updatelmageSorting'])->name('admin.products.update-image-sorting');
+        Route::post('/products/delete-dropzone-image', [
+            ProductController::class,
+            'deleteDropzonelmage'
+        ])->name('admin.products.delete-image');
+
+        Route::post('/products/delete-temp-image', [
+            ProductController::class,
+            'deleteTempProductImage'
+        ])->name('product.delete.temp.altimage');
+
+        Route::post('/products/delete-temp-video', [ProductController::class, 'deleteTempProductVideo'])->name('product.delete.temp.video');
+
+
 
 
 

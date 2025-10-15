@@ -300,6 +300,8 @@
 
 
                                 </div>
+                                <div id="mainImageDropzoneError" style="color: red; display: none;"></div>
+
 
                                 <div class="mb-3">
                                     <label class="form-label" for="product_images_dropzone">

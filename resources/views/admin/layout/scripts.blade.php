@@ -234,27 +234,62 @@
 <script>
   Dropzone.autoDiscover = false;
 
-  // Main Image Dropzone
-  let mainimageDropzone = new Dropzone("#mainimageDropzone", {
-    url: "{{ route('product.upload.image') }}", // ✅ syntaxe correcte pour route()
+  // Product Main Image Dropzone
+  let mainImageDropzone = new Dropzone("#mainImageDropzone", {
+    url: "{{ route('product.upload.image') }}",
     maxFiles: 1,
     acceptedFiles: "image/*",
-    maxFilesize: 0.5, // en Mo → 500 Ko
+    maxFilesize: 0.5,
     addRemoveLinks: true,
-    dictDefaultMessage: "Glissez-déposez une image ou cliquez pour téléverser",
+    dictDefaultMessage: "Drag & drop product image or click to upload",
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
     },
+    success: function(file, response) {
+      // Store file name to reference it during deletion
+      file.uploadedFileName = response.fileName;
+      document.getElementById('main_image_hidden').value = response.fileName;
+    },
+    removedfile: function(file) {
+      // Optional: Check if the file was successfully uploaded
+      if (file.uploadedFileName) {
+        $.ajax({
+          url: "{{ route('admin.products.delete-image') }}", // Adjust route if needed
+          type: 'POST',
+          data: {
+            _token: "{{ csrf_token() }}",
+            image: file.uploadedFileName
+          },
+          success: function(response) {
+            console.log("Main image deleted successfully");
+            // Clear hidden field if the image is removed
+            document.getElementById('main_image_hidden').value = '';
+          },
+          error: function() {
+            console.log("Error deleting main image");
+          }
+        });
+      }
+      // Remove preview from Dropzone UI
+      if (file.previewElement != null) {
+        file.previewElement.parentNode.removeChild(file.previewElement);
+      }
+    },
+    error: function(file, message) {
+      if (!file.alreadyRejected) {
+        file.alreadyRejected = true;
+        let errorContainer = document.getElementById('mainImageDropzoneError');
+        if (errorContainer) {
+          errorContainer.innerText = typeof message === 'string' ? message : message.message;
+          errorContainer.style.display = 'block';
+          setTimeout(() => {
+            errorContainer.style.display = 'none';
+          }, 4000);
+        }
+      }
+      this.removeFile(file);
+    },
     init: function() {
-      this.on("success", function(file, response) {
-        document.getElementById('main_image_hidden').value = response.fileName;
-      });
-
-      this.on("error", function(file, message) {
-        alert(message);
-        this.removeFile(file);
-      });
-
       this.on("maxfilesexceeded", function(file) {
         this.removeAllFiles();
         this.addFile(file);
@@ -262,6 +297,8 @@
     }
   });
 
+
+  // Product alternate Dropzone
   let productImagesDropzone = new Dropzone("#productImagesDropzone", {
     url: "{{ route('product.upload.images') }}",
     maxFiles: 10,
@@ -276,34 +313,35 @@
     },
     init: function() {
       this.on("success", function(file, response) {
-        // Append filename to hidden input
         let hiddenInput = document.getElementById('product_images_hidden');
         let currentVal = hiddenInput.value;
-        if (currentVal === "") {
-          hiddenInput.value = response.fileName;
-        } else {
-          hiddenInput.value = currentVal + ',' + response.fileName;
-        }
+        hiddenInput.value = currentVal ? currentVal + ',' + response.fileName : response.fileName;
         file.uploadedFileName = response.fileName;
       });
 
       this.on("removedfile", function(file) {
         if (file.uploadedFileName) {
           let hiddenInput = document.getElementById('product_images_hidden');
-          let currentVal = hiddenInput.value;
-          let files = currentVal.split(',');
-          files = files.filter(name => name !== file.uploadedFileName);
-          hiddenInput.value = files.join(',');
+          hiddenInput.value = hiddenInput.value
+            .split(',')
+            .filter(name => name !== file.uploadedFileName)
+            .join(',');
 
-          // Optional: Delete the file from server
+          // Delete file on server
           $.ajax({
-            url: "{{ route('product.delete.temp.image') }}",
+            url: "{{ route('product.delete.temp.altimage') }}",
             type: 'POST',
             data: {
               filename: file.uploadedFileName
             },
             headers: {
               'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(resp) {
+              console.log("Image deleted:", file.uploadedFileName);
+            },
+            error: function() {
+              console.log("Error deleting image:", file.uploadedFileName);
             }
           });
         }
@@ -312,32 +350,55 @@
   });
 
 
+
   let productVideoDropzone = new Dropzone("#productVideoDropzone", {
-    url: "{{ route('product.upload.video') }}", // ✅ route correcte
+    url: "{{ route('product.upload.video') }}",
     maxFiles: 1,
     acceptedFiles: "video/*",
-    maxFilesize: 2, // ✅ 2 Mo max
+    maxFilesize: 2,
     addRemoveLinks: true,
-    dictDefaultMessage: "Glissez-déposez la vidéo ou cliquez pour téléverser",
+    dictDefaultMessage: "Drag & drop product video or click to upload",
     headers: {
       'X-CSRF-TOKEN': "{{ csrf_token() }}"
     },
+    success: function(file, response) {
+      document.getElementById('product_video_hidden').value = response.fileName;
+      file.uploadedFileName = response.fileName;
+    },
+    removedfile: function(file) {
+      if (file.uploadedFileName) {
+        document.getElementById('product_video_hidden').value = '';
+        // Delete file on server
+        $.ajax({
+          url: "{{ route('product.delete.temp.video') }}",
+          type: 'POST',
+          data: {
+            filename: file.uploadedFileName
+          },
+          headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+          },
+          success: function(resp) {
+            console.log("Video deleted:", file.uploadedFileName);
+          },
+          error: function() {
+            console.log("Error deleting video:", file.uploadedFileName);
+          }
+        });
+      }
+      // Remove preview
+      if (file.previewElement !== null) {
+        file.previewElement.parentNode.removeChild(file.previewElement);
+      }
+    },
     init: function() {
-      this.on("success", function(file, response) {
-        document.getElementById('product_video_hidden').value = response.fileName;
-      });
-
-      this.on("error", function(file, message) {
-        alert(message);
-        this.removeFile(file);
-      });
-
       this.on("maxfilesexceeded", function(file) {
         this.removeAllFiles();
         this.addFile(file);
       });
     }
   });
+
 
   // Product Image Sort Script
   $("#sortableImages").sortable({

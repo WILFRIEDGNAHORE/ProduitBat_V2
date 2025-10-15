@@ -191,4 +191,24 @@ class ProductController extends Controller
         $this->productService->updatelmageSorting($request->sorted_images);
         return response()->json(['status' => 'success']);
     }
+
+    public function deleteDropzoneImage(Request $request)
+    {
+        $deleted = $this->productService->deleteDropzoneImage($request->image);
+        return response()->json(['status' => $deleted ? 'deleted' : 'file_not_found'], $deleted ?
+            200 : 404);
+    }
+
+    public function deleteTempProductImage(Request $request)
+    {
+        $deleted = $this->productService->deleteDropzoneImage($request->filename);
+        return response()->json(['status' => $deleted ? 'deleted' : 'file_not_found'], $deleted ?
+            200 : 404);
+    }
+
+    public function deleteTempProductVideo(Request $request)
+    {
+        $deleted = $this->productService->deleteDropzoneVideo($request->filename);
+        return response()->json(['status' => $deleted ? 'deleted' : 'file_not_found'], $deleted ? 200 : 404);
+    }
 }
