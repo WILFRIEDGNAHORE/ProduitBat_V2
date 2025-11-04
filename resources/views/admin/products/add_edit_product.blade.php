@@ -290,7 +290,7 @@
 
                                     @if(!empty($product['main_image']))
                                     <a target="_blank" href="{{ url('front/images/products/' . $product['main_image']) }}">
-                                        <img style="width:50px; margin:10px;" src="{{ asset('front/images/products/' . $product['main_image']) }}" alt="Product Image">
+                                        <img style="width:50px; margin:10px;" src="{{ url('product-image/thumbnail/' . $product->main_image) }}" alt="Product Image">
                                     </a>
                                     <a style="color:#3f6ed3;" class="confirmDelete" title="Delete Product Image"
                                         href="javascript:void(0)" data-module="product-main-image" data-id="{{ $product['id'] }}">
@@ -328,7 +328,7 @@
                                             style="display:inline-block; width:60px; height:60px; cursor:move;">
 
                                             <a target="_blank" href="{{ url('front/images/products/' . $img->image) }}">
-                                                <img src="{{ asset('front/images/products/' . $img->image) }}"
+                                                <img src="{{ url('product-image/thumbnail/' . $img->image) }}"
                                                     class="img-fluid rounded"
                                                     style="width:100%; height:100%; object-fit:cover;">
                                             </a>
