@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\ProductRequest;
 use Session;
 use Auth;
 use App\Models\Category;
+use App\Models\ColumnPreference;
 
 class ProductController extends Controller
 {
@@ -27,9 +28,18 @@ class ProductController extends Controller
         if ($result['status'] == "error") {
             return redirect('admin/dashboard')->with('error_message', $result['message']);
         }
+
+        $productsSavedOrderRaw = ColumnPreference::where('admin_id', Auth::guard('admin')->id())
+            ->where('table_name', 'products')
+            ->value('column_order');
+
+        $productsSavedOrder = $productsSavedOrderRaw ? json_decode($productsSavedOrderRaw, true) : [];
+
+
         return view('admin.products.index', [
             'products' => $result['products'],
-            'productsModule' => $result['productsModule']
+            'productsModule' => $result['productsModule'],
+            'productsSavedOrder' => $productsSavedOrder
         ]);
     }
 

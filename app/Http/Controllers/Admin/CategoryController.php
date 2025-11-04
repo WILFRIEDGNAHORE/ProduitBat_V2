@@ -8,15 +8,16 @@ use App\Services\Admin\CategoryService;
 use App\Http\Requests\Admin\CategoryRequest;
 use Session;
 use App\Models\Category;
-
+use App\Models\ColumnPreference;
+use Auth;
 class CategoryController extends Controller
 {
     protected $categoryService;
+
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
     }
-
 
     /**
      * Display a listing of the resource.
@@ -31,15 +32,23 @@ class CategoryController extends Controller
             return redirect('admin/dashboard')->with('error_message', $result['message']);
         }
 
+        $categoriesSavedOrderRaw = ColumnPreference::where('admin_id', Auth::guard('admin')->id())
+            ->where('table_name', 'categories')
+            ->value('column_order');
+
+        $categoriesSavedOrder = $categoriesSavedOrderRaw ? json_decode($categoriesSavedOrderRaw, true) : [];
+
         return view('admin.categories.index', [
-            'categories'       => $result['categories'],
-            'categoriesModule' => $result['categoriesModule']
+            'categories' => $result['categories'],
+            'categoriesModule' => $result['categoriesModule'],
+            'categoriesSavedOrder' => $categoriesSavedOrder,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         $title = 'Add Category';
