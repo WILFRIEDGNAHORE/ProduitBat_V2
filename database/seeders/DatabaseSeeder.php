@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\AdminsTableSeeder;
 use Database\Seeders\ProductsAttributesTableSeeder;
+use Database\Seeders\BrandTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoryTableSeeder::class);
         $this->call(ColorTableSeeder::class);
         $this->call(ProductsAttributesTableSeeder::class);
+        $this->call(BrandTableSeeder::class); 
     }
 }
