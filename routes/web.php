@@ -123,7 +123,9 @@ Route::prefix('admin')->group(function () {
 
 
 
-        Route::post('/save-column-order', [AdminController :: class, 'saveColumnOrder']);
+        //Route::post('/save-column-order', [AdminController :: class, 'saveColumnOrder']);
+        Route::post('/save-column-visibility', [AdminController::class, 'saveColumnVisibility']);
+
 
 
         //logout Route

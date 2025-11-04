@@ -437,12 +437,13 @@
 
 
 <!-- DataTables CSS -->
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
 <!-- ColReorder CSS -->
-<link rel="stylesheet"
-      href="https://cdn.datatables.net/colreorder/1.6.2/css/colReorder.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.6.2/css/colReorder.dataTables.min.css">
+
+<!-- Buttons CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -453,65 +454,92 @@
 <!-- ColReorder JS -->
 <script src="https://cdn.datatables.net/colreorder/1.6.2/js/dataTables.colReorder.min.js"></script>
 
+<!-- Buttons Extension -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+<!-- ColVis Button -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
 <script>
-  $(document).ready(function() {
-    $("#subadmins").DataTable();
-    // Inject PHP data into JS safely
-    let categoriesSavedOrder = JSON.parse('@json($categoriesSavedOrder ?? [])');
-    let productsSavedOrder = JSON.parse('@json($productsSavedOrder ?? [])');
-
-    // Initialize Categories DataTable
-    let categoriesTable = $("#categories").DataTable({
-        order: [[0, "desc"]],
-        colReorder: {
-            order: categoriesSavedOrder
+$(document).ready(function () {
+    const tablesConfig = [
+        {
+            id: "categories",
+            savedOrder: JSON.parse('@json($categoriesSavedOrder ?? null)'),
+            hiddenCols: JSON.parse('@json($categoriesHiddenCols ?? [])'),
+            tableName: "categories"
         },
-        stateSave: false
+        {
+            id: "products",
+            savedOrder: JSON.parse('@json($productsSavedOrder ?? null)'),
+            hiddenCols: JSON.parse('@json($productsHiddenCols ?? [])'),
+            tableName: "products"
+        }
+    ];
+
+    tablesConfig.forEach(config => {
+
+        const tableElement = $("#" + config.id);
+
+        if (tableElement.length > 0) {
+
+            let dataTable = tableElement.DataTable({
+                order: [[0, "desc"]],
+                colReorder: {
+                    order: config.savedOrder
+                },
+                dom: 'Bfrtip',
+                buttons: ['colvis'],
+                columnDefs: config.hiddenCols.map(index => ({
+                    targets: parseInt(index),
+                    visible: false
+                }))
+            });
+
+            // On column reorder
+            dataTable.on('column-reorder', function () {
+                savePreferences(config.tableName, dataTable.colReorder.order(), getHiddenColumnIndexes(dataTable));
+            });
+
+            // On column visibility change
+            dataTable.on('column-visibility.dt', function () {
+                savePreferences(config.tableName, dataTable.colReorder.order(), getHiddenColumnIndexes(dataTable));
+            });
+
+        }
     });
 
-    // Handle column reorder for Categories
-    categoriesTable.on('column-reorder', function () {
-        let columnOrder = categoriesTable.colReorder.order();
+    // Get hidden column indexes
+    function getHiddenColumnIndexes(dataTable) {
+        let hidden = [];
+        dataTable.columns().every(function (index) {
+            if (!this.visible()) hidden.push(index);
+        });
+        return hidden;
+    }
+
+    // Save preferences via AJAX
+    function savePreferences(tableName, columnOrder, hiddenCols) {
         $.ajax({
-            url: "{{ url('admin/save-column-order') }}",
+            url: "{{ url('admin/save-column-visibility') }}",
             type: "POST",
             data: {
                 _token: "{{ csrf_token() }}",
-                table_key: "categories",
-                column_order: columnOrder
+                table_key: tableName,
+                column_order: columnOrder,
+                hidden_columns: hiddenCols
             },
             success: function (response) {
-                console.log("Category column order saved:", response);
-            }
-        });
-    });
-
-    // Initialize Products DataTable
-    let productsTable = $("#products").DataTable({
-        order: [[0, "desc"]],
-        colReorder: {
-            order: productsSavedOrder
-        },
-        stateSave: false
-    });
-
-    // Handle column reorder for Products
-    productsTable.on('column-reorder', function () {
-        let columnOrder = productsTable.colReorder.order();
-        $.ajax({
-            url: "{{ url('admin/save-column-order') }}",
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                table_key: "products",
-                column_order: columnOrder
+                console.log("Preferences saved for " + tableName + ":", response);
             },
-            success: function (response) {
-                console.log("Product column order saved:", response);
+            error: function (xhr, status, error) {
+                console.error("Error saving preferences for " + tableName + ":", error);
             }
         });
-    });
-  });
+    }
+
+});
 </script>
+
 You can also use it for other modules like:
 $("#subadmins").DataTable();

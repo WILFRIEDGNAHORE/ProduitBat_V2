@@ -10,5 +10,6 @@ class ColumnPreference extends Model
         'admin_id',
         'table_name',
         'column_order',
+        'hidden_columns',
     ];
 }

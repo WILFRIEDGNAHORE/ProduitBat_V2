@@ -10,6 +10,7 @@ use Session;
 use App\Models\Category;
 use App\Models\ColumnPreference;
 use Auth;
+
 class CategoryController extends Controller
 {
     protected $categoryService;
@@ -32,18 +33,24 @@ class CategoryController extends Controller
             return redirect('admin/dashboard')->with('error_message', $result['message']);
         }
 
-        $categoriesSavedOrderRaw = ColumnPreference::where('admin_id', Auth::guard('admin')->id())
+        $categories = $result['categories'];
+        $categoriesModule = $result['categoriesModule'];
+
+        $columnPrefs = ColumnPreference::where('admin_id', Auth::guard('admin')->id())
             ->where('table_name', 'categories')
-            ->value('column_order');
+            ->first();
 
-        $categoriesSavedOrder = $categoriesSavedOrderRaw ? json_decode($categoriesSavedOrderRaw, true) : [];
+        $categoriesSavedOrder = $columnPrefs ? json_decode($columnPrefs->column_order, true) : null;
+        $categoriesHiddenCols = $columnPrefs ? json_decode($columnPrefs->hidden_columns, true) : [];
 
-        return view('admin.categories.index', [
-            'categories' => $result['categories'],
-            'categoriesModule' => $result['categoriesModule'],
-            'categoriesSavedOrder' => $categoriesSavedOrder,
-        ]);
+        return view('admin.categories.index')->with(compact(
+            'categories',
+            'categoriesModule',
+            'categoriesSavedOrder',
+            'categoriesHiddenCols'
+        ));
     }
+
 
     /**
      * Show the form for creating a new resource.
