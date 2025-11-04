@@ -462,6 +462,9 @@
 
 <script>
 $(document).ready(function () {
+  $("#subadmins").Datatable();
+  $("#brands").Datatable();
+
     const tablesConfig = [
         {
             id: "categories",

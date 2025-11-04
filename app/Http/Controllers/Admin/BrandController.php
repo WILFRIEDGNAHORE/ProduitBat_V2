@@ -4,16 +4,37 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Session;
+use App\Services\Admin\BrandService;
 
 class BrandController extends Controller
 {
+
+    protected $brandService;
+
+    public function __construct(BrandService $brandService)
+    {
+        $this->brandService = $brandService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        Session::put('page', 'brands');
+
+        $result = $this->brandService->brands();
+
+        if ($result['status'] === 'error') {
+            return redirect('admin/dashboard')->with('error_message', $result['message']);
+        }
+
+        return view('admin.brands.index', [
+            'brands' => $result['brands'],
+            'brandsModule' => $result['brandsModule']
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -62,4 +83,18 @@ class BrandController extends Controller
     {
         //
     }
+
+    public function updateBrandStatus(Request $request)
+{
+    if ($request->ajax()) {
+        $data = $request->all();
+        $status = $this->brandService->updateBrandStatus($data);
+
+        return response()->json([
+            'status' => $status,
+            'brand_id' => $data['brand_id']
+        ]);
+    }
+}
+
 }
