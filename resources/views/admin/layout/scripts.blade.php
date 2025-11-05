@@ -460,10 +460,33 @@
 <!-- ColVis Button -->
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
+
 <script>
 $(document).ready(function () {
-  $("#subadmins").Datatable();
-  $("#brands").Datatable();
+  // Initialize AdminLTE sidebar menu
+  try {
+    $('[data-widget="treeview"]').Treeview('init');
+  } catch(e) {
+    // Fallback: Manual dropdown toggle
+    $('.nav-link').on('click', function(e) {
+      if ($(this).next('.nav-treeview').length > 0) {
+        e.preventDefault();
+        var $parent = $(this).parent();
+        var $submenu = $(this).next('.nav-treeview');
+        
+        // Toggle current menu
+        $parent.toggleClass('menu-open');
+        $submenu.slideToggle();
+        
+        // Close other menus
+        $parent.siblings('.nav-item').removeClass('menu-open').find('.nav-treeview').slideUp();
+      }
+    });
+  }
+  
+  // Initialize DataTables (fix typo: DataTable not Datatable)
+  $("#subadmins").DataTable();
+  $("#brands").DataTable();
 
     const tablesConfig = [
         {

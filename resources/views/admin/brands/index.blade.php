@@ -27,20 +27,21 @@
                         <div class="card-header">
                             <h3 class="card-title">Brands</h3>
                             @if(isset($brandsModule) && ($brandsModule['edit_access'] == 1 || $brandsModule['full_access'] == 1))
-                                <a style="max-width: 150px; float:right; display: inline-block;"
-                                   href="{{ url('admin/brands/create') }}" class="btn btn-primary">
-                                    Add Brand
-                                </a>
+                            <a style="max-width: 150px; float:right; display: inline-block;"
+                                href="{{ url('admin/brands/create') }}" class="btn btn-primary">
+                                Add Brand
+                            </a>
                             @endif
                         </div>
 
                         <div class="card-body">
-                            @if (Session::has('success_message'))
-                                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                                    <strong>Success:</strong> {{ Session::get('success_message') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
+                            @if(Session::has('success_message'))
+                            <div class="alert alert-success alert-dismissible fade show mx-1 my-3" role="alert">
+                                <strong>Success: </strong> {{ Session::get('success_message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                             @endif
+
 
                             <table id="brands" class="table table-bordered table-striped">
                                 <thead>
@@ -54,57 +55,57 @@
                                 </thead>
                                 <tbody>
                                     @foreach($brands as $brand)
-                                        <tr>
-                                            <td>{{ $brand->id }}</td>
-                                            <td>{{ $brand->name }}</td>
-                                            <td>{{ $brand->url }}</td>
-                                            <td>{{ $brand->created_at->format('F j, Y, g:i a') }}</td>
-                                            <td>
-                                                @if(isset($brandsModule) && ($brandsModule['edit_access'] == 1 || $brandsModule['full_access'] == 1))
-                                                    @if ($brand->status == 1)
-                                                        <a class="updateBrandStatus"
-                                                           data-brand-id="{{ $brand->id }}"
-                                                           style="color:#3f6ed3"
-                                                           href="javascript:void(0)">
-                                                            <i class="fas fa-toggle-on" data-status="Active"></i>
-                                                        </a>
-                                                    @else
-                                                        <a class="updateBrandStatus"
-                                                           data-brand-id="{{ $brand->id }}"
-                                                           style="color:grey"
-                                                           href="javascript:void(0)">
-                                                            <i class="fas fa-toggle-off" data-status="Inactive"></i>
-                                                        </a>
-                                                    @endif
+                                    <tr>
+                                        <td>{{ $brand->id }}</td>
+                                        <td>{{ $brand->name }}</td>
+                                        <td>{{ $brand->url }}</td>
+                                        <td>{{ $brand->created_at->format('F j, Y, g:i a') }}</td>
+                                        <td>
+                                            @if(isset($brandsModule) && ($brandsModule['edit_access'] == 1 || $brandsModule['full_access'] == 1))
+                                            @if ($brand->status == 1)
+                                            <a class="updateBrandStatus"
+                                                data-brand-id="{{ $brand->id }}"
+                                                style="color:#3f6ed3"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-on" data-status="Active"></i>
+                                            </a>
+                                            @else
+                                            <a class="updateBrandStatus"
+                                                data-brand-id="{{ $brand->id }}"
+                                                style="color:grey"
+                                                href="javascript:void(0)">
+                                                <i class="fas fa-toggle-off" data-status="Inactive"></i>
+                                            </a>
+                                            @endif
 
-                                                    {{-- Edit link (requires edit or full access) --}}
-                                                    @if($brandsModule['edit_access'] == 1 || $brandsModule['full_access'] == 1)
-                                                        &nbsp;&nbsp;
-                                                        <a href="{{ url('admin/brands/' . $brand->id . '/edit') }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        &nbsp;&nbsp;
-                                                    @endif
+                                            {{-- Edit link (requires edit or full access) --}}
+                                            @if($brandsModule['edit_access'] == 1 || $brandsModule['full_access'] == 1)
+                                            &nbsp;&nbsp;
+                                            <a href="{{ url('admin/brands/' . $brand->id . '/edit') }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            &nbsp;&nbsp;
+                                            @endif
 
-                                                    {{-- Delete (requires full access) --}}
-                                                    @if($brandsModule['full_access'] == 1)
-                                                        <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline-block;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="confirmDelete"
-                                                                    name="Brand"
-                                                                    title="Delete Brand"
-                                                                    type="button"
-                                                                    style="border:none; background:none; color:#3f6ed3;"
-                                                                    data-module="brand"
-                                                                    data-id="{{ $brand->id }}">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                        </tr>
+                                            {{-- Delete (requires full access) --}}
+                                            @if($brandsModule['full_access'] == 1)
+                                            <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="confirmDelete"
+                                                    name="Brand"
+                                                    title="Delete Brand"
+                                                    type="button"
+                                                    style="border:none; background:none; color:#3f6ed3;"
+                                                    data-module="brand"
+                                                    data-id="{{ $brand->id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            @endif
+                                            @endif
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

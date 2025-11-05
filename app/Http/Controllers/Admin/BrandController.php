@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Session;
 use App\Services\Admin\BrandService;
+use App\Models\Brand;
 
 class BrandController extends Controller
 {
@@ -41,16 +42,20 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Add Brand';
+        return view('admin.brands.add_edit_brand', compact('title'));
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $message = $this->brandService->addEditBrand($request);
+        return redirect()->route('brands.index')->with('success_message', $message);
     }
+
 
     /**
      * Display the specified resource.
@@ -65,7 +70,9 @@ class BrandController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = 'Edit Brand';
+        $brand = Brand::findOrFail($id);
+        return view('admin.brands.add_edit_brand', compact('title', 'brand'));
     }
 
     /**
@@ -73,8 +80,11 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->merge(['id' => $id]);
+        $message = $this->brandService->addEditBrand($request);
+        return redirect()->route('brands.index')->with('success_message', $message);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -85,16 +95,15 @@ class BrandController extends Controller
     }
 
     public function updateBrandStatus(Request $request)
-{
-    if ($request->ajax()) {
-        $data = $request->all();
-        $status = $this->brandService->updateBrandStatus($data);
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            $status = $this->brandService->updateBrandStatus($data);
 
-        return response()->json([
-            'status' => $status,
-            'brand_id' => $data['brand_id']
-        ]);
+            return response()->json([
+                'status' => $status,
+                'brand_id' => $data['brand_id']
+            ]);
+        }
     }
-}
-
 }

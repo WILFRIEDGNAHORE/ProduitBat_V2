@@ -40,6 +40,37 @@
       crossorigin="anonymous"
     />
 
-    >
       <!--Font Awesome CSS-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />  
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+      
+      <!-- Custom CSS for sidebar menu -->
+      <style>
+        /* Sidebar menu animations */
+        .nav-treeview {
+          display: none;
+          transition: all 0.3s ease-in-out;
+        }
+        
+        .nav-item.menu-open > .nav-treeview {
+          display: block;
+        }
+        
+        /* Arrow rotation */
+        .nav-arrow {
+          transition: transform 0.3s ease-in-out;
+        }
+        
+        .nav-item.menu-open > .nav-link .nav-arrow {
+          transform: rotate(90deg);
+        }
+        
+        /* Hover effects */
+        .nav-link:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Active menu styling */
+        .nav-link.active {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+      </style>  

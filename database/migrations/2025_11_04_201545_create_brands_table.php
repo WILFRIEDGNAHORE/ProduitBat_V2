@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('meta_keywords')->nullable();
+            $table->tinyInteger('menu_status')->default(1);
             $table->tinyInteger('status')->default(1);
-
             $table->timestamps();
         });
     }
