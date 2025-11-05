@@ -29,10 +29,30 @@ class AdminController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        Session::put('page', 'dashboard');
-        return view('admin.dashboard');
-    }
+{
+    Session::put('page', 'dashboard');
+
+    $categoriesCount = \App\Models\Category::count();
+    $productsCount   = \App\Models\Product::count();
+    $brandsCount     = \App\Models\Brand::count();
+    $usersCount      = \App\Models\User::count();
+    $couponsCount    = 0;
+    $ordersCount     = 0;
+    $pagesCount      = 0;
+    $enquiriesCount  = 0;
+
+    return view('admin.dashboard')->with(compact(
+        'categoriesCount',
+        'productsCount',
+        'brandsCount',
+        'usersCount',
+        'couponsCount',
+        'ordersCount',
+        'pagesCount',
+        'enquiriesCount'
+    ));
+}
+
 
     /**
      * Show the form for creating a new resource.

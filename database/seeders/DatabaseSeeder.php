@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\AdminsTableSeeder;
 use Database\Seeders\ProductsAttributesTableSeeder;
 use Database\Seeders\BrandTableSeeder;
-
+use Database\Seeders\ProductTableSeeder;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminsTableSeeder::class);
         $this->call(CategoryTableSeeder::class);
         $this->call(ColorTableSeeder::class);
+        $this->call(ProductsTableSeeder::class);
         $this->call(ProductsAttributesTableSeeder::class);
-        $this->call(BrandTableSeeder::class); 
+        $this->call(BrandTableSeeder::class);
     }
 }

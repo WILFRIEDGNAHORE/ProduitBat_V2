@@ -36,7 +36,7 @@ class ProductRequest extends FormRequest
 {
     return [
         'category_id.required'   => 'Category is required',
-        'category_id.required'   => 'Category is required',
+        'brand_id.required'   => 'Brand is required',
         'product_code.required'  => 'Product Code is required',
         'product_price.required' => 'Product Price is required',
         'product_price.numeric'  => 'Valid Product Price is required',
