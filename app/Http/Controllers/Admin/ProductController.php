@@ -11,6 +11,7 @@ use Session;
 use Auth;
 use App\Models\Category;
 use App\Models\ColumnPreference;
+use App\Models\Brand;
 
 class ProductController extends Controller
 {
@@ -57,9 +58,11 @@ class ProductController extends Controller
     {
         $title = 'Add Product';
         $getCategories = Category::getCategories('Admin');
+        // Récupérer toutes les marques actives
+        $brands = Brand::where('status', 1)->get()->toArray();
         return view(
             'admin.products.add_edit_product',
-            compact('title', 'getCategories')
+            compact('title', 'getCategories', 'brands')
         );
     }
 
@@ -92,10 +95,13 @@ class ProductController extends Controller
         $title = 'Edit Product';
         $product = Product::with('product_images', 'attributes')->findOrFail($id);
         $getCategories = Category::getCategories('Admin');
+        // Récupérer toutes les marques actives
+        $brands = Brand::where('status', 1)->get()->toArray();
         return view('admin.products.add_edit_product', compact(
             'title',
             'product',
-            'getCategories'
+            'getCategories',
+            'brands'
         ));
     }
 
